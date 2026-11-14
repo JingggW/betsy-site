@@ -139,6 +139,16 @@ a:focus-visible,button:focus-visible{outline:2px dashed var(--pink);outline-offs
 .page-foot .hand{margin:0;font-size:20px;color:var(--ink-2)}
 .tiny{margin:0;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
 
+/* naps: wider layout on tablets / desktops */
+@media (min-width:768px){
+  .col--wide{max-width:1040px;gap:36px}
+  .col--wide .page-head h1{font-size:76px}
+  .col--wide .hero-nap img{width:440px}
+  .col--wide .nap-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:32px 20px}
+  .col--wide .nap-card img{width:100%;max-width:210px;height:230px}
+  .col--wide .order{width:100%;max-width:560px;align-self:center}
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important}
   .portrait .s{stroke-dashoffset:0}
