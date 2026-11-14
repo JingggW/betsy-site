@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=3">
 </head>
 <body>
 <nav class="nav" aria-label="Main">
@@ -35,17 +35,7 @@
     <div class="rule"></div>
   </header>
 
-  <section class="hero-nap" aria-label="House speciality">
-    <p class="kicker">— house speciality —</p>
-    <button class="nap-btn" type="button" data-nap="roach" aria-pressed="false" aria-label="Choose The Roach">
-      <img src="assets/img/roach.webp" alt="Betsy asleep on her back, legs in the air">
-      <span class="fx"></span>
-    </button>
-    <p class="flip-note" id="flip-note" aria-live="polite"></p>
-    <div class="nap-title"><span class="pill">deep</span><h2>The Roach</h2></div>
-    <p class="nap-desc">legs to the sky, belly to the sun.<br>fully committed. do not touch.</p>
-    <p class="nap-time">3 hrs</p>
-  </section>
+  <section class="hero-nap" id="hero" aria-label="Featured nap"></section>
 
   <div class="divider"><span>the classics</span></div>
 
@@ -63,7 +53,7 @@
 <script>
 (function () {
   var NAPS = {
-    roach:   { name: 'The Roach', mins: 180 },
+    roach:   { name: 'The Roach', tag: 'deep', desc: 'legs to the sky, belly to the sun.', more: 'fully committed. do not touch.', mins: 180, img: 'roach.webp', alt: 'Betsy asleep on her back, legs in the air' },
     chin:    { name: 'The Chin Rest', tag: 'light', desc: 'head on the ledge, eyes on your snack', mins: 20, img: 'chin.webp', alt: 'Betsy in a blue coat resting her chin on the edge of her bed' },
     pretzel: { name: 'The Lady Pretzel', tag: 'light', desc: 'legs crossed, coat on, judging you', mins: 60, img: 'pretzel.webp', alt: 'Betsy in a lilac puffer lying with her long legs crossed' },
     pillow:  { name: 'The Pillow Hug', tag: 'deep', desc: 'face in cushion. do not disturb.', mins: 120, img: 'pillow.webp', alt: 'Betsy with her face pressed into a couch cushion' },
@@ -85,34 +75,46 @@
   }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-  // build the classics grid once
-  var grid = document.getElementById('grid');
-  grid.innerHTML = ['chin', 'pretzel', 'pillow', 'lap'].map(function (id) {
-    var n = NAPS[id];
-    return '<div class="nap-card">' +
-      '<button class="nap-btn" type="button" data-nap="' + id + '" aria-pressed="false" aria-label="Choose ' + esc(n.name) + '">' +
-      '<img src="assets/img/' + n.img + '" alt="' + esc(n.alt) + '" loading="lazy"><span class="fx"></span></button>' +
-      '<span class="pill">' + n.tag + '</span><h3>' + esc(n.name) + '</h3>' +
-      '<p class="nap-desc">' + esc(n.desc) + '</p><p class="nap-time">' + fmt(n.mins) + '</p></div>';
-  }).join('');
+  var ORDER = ['roach', 'chin', 'pretzel', 'pillow', 'lap'];
+  var hero = document.getElementById('hero'), grid = document.getElementById('grid');
 
   var FX = '<span class="z" style="left:62%;top:32%;font-size:20px;animation-delay:0s">z</span>' +
            '<span class="z" style="left:70%;top:24%;font-size:26px;animation-delay:.8s">z</span>' +
            '<span class="z" style="left:78%;top:16%;font-size:34px;animation-delay:1.6s">Z</span>' +
            '<span class="stamp-yes" aria-hidden="true">yes!</span>';
 
-  function renderPicks() {
-    document.querySelectorAll('.nap-btn').forEach(function (b) {
-      var on = b.dataset.nap === state.picked;
-      b.setAttribute('aria-pressed', on);
-      b.querySelector('.fx').innerHTML = on ? FX : '';
-      var img = b.querySelector('img');
-      if (b.dataset.nap !== 'roach') {
-        img.classList.remove('wiggle');
-        if (on) { void img.offsetWidth; img.classList.add('wiggle'); }
-      }
-    });
-    document.getElementById('flip-note').textContent = state.picked === 'roach' ? "look, now she's the right way up" : '';
+  function napBtn(id, on, lazy) {
+    var n = NAPS[id];
+    return '<button class="nap-btn" type="button" data-nap="' + id + '" aria-pressed="' + on + '" aria-label="Choose ' + esc(n.name) + '">' +
+      '<img src="assets/img/' + n.img + '" alt="' + esc(n.alt) + '"' + (lazy ? ' loading="lazy"' : '') + '>' +
+      '<span class="fx">' + (on ? FX : '') + '</span></button>';
+  }
+
+  // the picked nap takes the big spot at the top; everything else sits in the grid
+  function renderPicks(animate) {
+    var featured = state.picked || 'roach', n = NAPS[featured], on = !!state.picked;
+    hero.dataset.nap = featured;
+    hero.innerHTML = '<div class="hero-nap__inner' + (animate ? ' pop' : '') + '">' +
+      '<p class="kicker">' + (on ? '— your pick —' : '— house speciality —') + '</p>' +
+      napBtn(featured, on, false) +
+      '<p class="flip-note" aria-live="polite">' + (on && featured === 'roach' ? "look, now she's the right way up" : '') + '</p>' +
+      '<div class="nap-title"><span class="pill">' + n.tag + '</span><h2>' + esc(n.name) + '</h2></div>' +
+      '<p class="nap-desc">' + esc(n.desc) + (n.more ? '<br>' + esc(n.more) : '') + '</p>' +
+      '<p class="nap-time">' + fmt(n.mins) + '</p></div>';
+    if (on && featured !== 'roach') {
+      var img = hero.querySelector('img');
+      requestAnimationFrame(function () { img.classList.add('wiggle'); });
+    }
+    if (on && featured === 'roach') {
+      var r = hero.querySelector('img');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { r.classList.add('flipped'); }); });
+    }
+    grid.innerHTML = ORDER.filter(function (id) { return id !== featured; }).map(function (id) {
+      var c = NAPS[id];
+      return '<div class="nap-card">' + napBtn(id, false, true) +
+        '<span class="pill">' + c.tag + '</span><h3>' + esc(c.name) + '</h3>' +
+        '<p class="nap-desc">' + esc(c.desc) + '</p><p class="nap-time">' + fmt(c.mins) + '</p></div>';
+    }).join('');
   }
 
   function totals() {
@@ -160,7 +162,15 @@
 
   document.addEventListener('click', function (e) {
     var nap = e.target.closest('[data-nap]');
-    if (nap) { state.picked = nap.dataset.nap; state.placed = false; renderPicks(); renderOrder(); return; }
+    if (nap) {
+      var fromGrid = !nap.closest('#hero');
+      state.picked = nap.dataset.nap; state.placed = false;
+      renderPicks(fromGrid); renderOrder();
+      var btn = hero.querySelector('.nap-btn');
+      btn.focus({ preventScroll: true });
+      if (fromGrid) hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     var add = e.target.closest('[data-addon]');
     if (add) { state.addons[add.dataset.addon] = !state.addons[add.dataset.addon]; renderOrder(); document.querySelector('[data-addon="' + add.dataset.addon + '"]').focus(); return; }
     var act = e.target.closest('[data-action]');

@@ -59,9 +59,10 @@ a:focus-visible,button:focus-visible{outline:2px dashed var(--pink);outline-offs
 /* ---------- naps ---------- */
 .nap-btn{position:relative;background:transparent;border:none;padding:6px;border-radius:24px;display:block;transition:transform .25s ease}
 .nap-btn[aria-pressed="true"]{transform:scale(1.03);outline:2px dashed var(--pink);outline-offset:-2px}
-.hero-nap{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
-.hero-nap img{width:320px;transition:transform .8s cubic-bezier(.3,1.4,.5,1)}
-.hero-nap .nap-btn[aria-pressed="true"] img{transform:rotate(180deg)}
+.hero-nap,.hero-nap__inner{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;width:100%}
+.hero-nap{scroll-margin-top:16px}
+.hero-nap img{width:320px;max-width:100%;transition:transform .8s cubic-bezier(.3,1.4,.5,1)}
+.hero-nap img.flipped{transform:rotate(180deg)}
 .nap-title{display:flex;align-items:center;gap:8px;margin-top:2px}
 .nap-title h2{margin:0;font-size:18px}
 .nap-desc{margin:0;font-family:var(--hand);font-size:21px;line-height:1.1;color:var(--ink-2)}
@@ -141,11 +142,16 @@ a:focus-visible,button:focus-visible{outline:2px dashed var(--pink);outline-offs
 
 /* naps: wider layout on tablets / desktops */
 @media (min-width:768px){
-  .col--wide{max-width:1040px;gap:36px}
+  .col--wide{max-width:1200px;gap:40px}
   .col--wide .page-head h1{font-size:76px}
-  .col--wide .hero-nap img{width:440px}
-  .col--wide .nap-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:32px 20px}
-  .col--wide .nap-card img{width:100%;max-width:210px;height:230px}
+  .col--wide .hero-nap img{width:420px}
+  .col--wide .hero-nap .nap-title h2{font-size:24px}
+  .col--wide .hero-nap .nap-desc{font-size:26px}
+  .col--wide .hero-nap .nap-time{font-size:18px}
+  .col--wide .nap-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:36px 28px}
+  .col--wide .nap-card img{width:100%;max-width:250px;height:260px}
+  .col--wide .nap-card h3{font-size:16px}
+  .col--wide .nap-card .nap-desc{font-size:20px}
   .col--wide .order{width:100%;max-width:560px;align-self:center}
 }
 
