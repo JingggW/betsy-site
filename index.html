@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Betsy</title>
+<meta name="description" content="Betsy: senior greyhound, professional napper, snack critic.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23B03F69'%3E%3Cellipse cx='12' cy='16' rx='5' ry='4.2'/%3E%3Cellipse cx='5.5' cy='10' rx='2.1' ry='2.7'/%3E%3Cellipse cx='9.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='14.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='18.5' cy='10' rx='2.1' ry='2.7'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="home">
+  <nav class="nav" aria-label="Main">
+    <a class="nav__brand" href="index.html">Betsy</a>
+    <div class="nav__links">
+      <a href="naps.html">Naps</a>
+      <a href="wardrobe.html">Wardrobe</a>
+    </div>
+  </nav>
+
+  <main class="hero" id="hero">
+    <div class="hero__text">
+      <p class="kicker up" style="animation-delay:4.3s">painted from life · on the couch</p>
+      <h1 class="up" style="animation-delay:4.5s">Betsy</h1>
+      <p class="hand up" style="animation-delay:4.75s">senior greyhound · professional napper · snack critic</p>
+      <a class="btn up" href="naps.html" style="animation-delay:5s">See the nap menu <span class="bob" aria-hidden="true">↓</span></a>
+    </div>
+    <div class="hero__art">
+      <div id="portrait-slot"></div>
+      <button class="btn btn--ghost" id="replay" type="button">paint her again</button>
+    </div>
+  </main>
+</div>
+
+<template id="portrait-tpl">
+  <svg class="portrait" role="img" aria-label="Watercolor portrait of Betsy, painted in from top to bottom" viewBox="0 0 560 655">
+    <defs>
+      <filter id="rough" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="4" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G" result="d"/>
+        <feGaussianBlur in="d" stdDeviation="2.5"/>
+      </filter>
+      <mask id="paint" maskUnits="userSpaceOnUse" x="0" y="0" width="560" height="655">
+        <g filter="url(#rough)" class="strokes"></g>
+        <rect class="all" x="0" y="0" width="560" height="655" fill="#fff"/>
+      </mask>
+    </defs>
+    <image href="assets/img/betsy-watercolor.webp" x="0" y="0" width="560" height="655" mask="url(#paint)"/>
+  </svg>
+</template>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  function paint() {
+    var slot = document.getElementById('portrait-slot');
+    slot.innerHTML = '';
+    slot.appendChild(document.getElementById('portrait-tpl').content.cloneNode(true));
+    var g = slot.querySelector('.strokes');
+    // horizontal brush sweeps, top to bottom
+    for (var i = 0; i < 12; i++) {
+      var y = 30 + i * 55, w = (i % 3 - 1) * 14;
+      var d = i % 2 === 0
+        ? 'M10,' + y + ' C190,' + (y + w) + ' 370,' + (y - w) + ' 550,' + (y + 6)
+        : 'M550,' + y + ' C370,' + (y - w) + ' 190,' + (y + w) + ' 10,' + (y + 6);
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', d);
+      p.setAttribute('pathLength', '1');
+      p.setAttribute('class', 's');
+      p.style.strokeWidth = '92px';
+      p.style.animationDelay = (0.2 + i * 0.3) + 's';
+      g.appendChild(p);
+    }
+  }
+  function restartText() {
+    document.querySelectorAll('.hero__text .up').forEach(function (el) {
+      el.style.animationName = 'none';
+      void el.offsetWidth;
+      el.style.animationName = '';
+    });
+  }
+  paint();
+  document.getElementById('replay').addEventListener('click', function () { paint(); restartText(); });
+})();
+</script>
+</body>
+</html>

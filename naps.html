@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Betsy's Nap Menu</title>
+<meta name="description" content="Select your favourite Betsy sleep position.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23B03F69'%3E%3Cellipse cx='12' cy='16' rx='5' ry='4.2'/%3E%3Cellipse cx='5.5' cy='10' rx='2.1' ry='2.7'/%3E%3Cellipse cx='9.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='14.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='18.5' cy='10' rx='2.1' ry='2.7'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="Main">
+  <a class="nav__brand" href="index.html">Betsy</a>
+  <div class="nav__links">
+    <a href="naps.html" aria-current="page">Naps</a>
+    <a href="wardrobe.html">Wardrobe</a>
+  </div>
+</nav>
+
+<main class="col">
+  <header class="page-head">
+    <p class="kicker">est. on the couch · open all day</p>
+    <h1>Betsy's <em>Nap Menu</em></h1>
+    <p class="hand">select your fav sleep position</p>
+    <div class="rule"></div>
+  </header>
+
+  <section class="hero-nap" aria-label="House speciality">
+    <p class="kicker">— house speciality —</p>
+    <button class="nap-btn" type="button" data-nap="roach" aria-pressed="false" aria-label="Choose The Roach">
+      <img src="assets/img/roach.webp" alt="Betsy asleep on her back, legs in the air">
+      <span class="fx"></span>
+    </button>
+    <p class="flip-note" id="flip-note" aria-live="polite"></p>
+    <div class="nap-title"><span class="pill">deep</span><h2>The Roach</h2></div>
+    <p class="nap-desc">legs to the sky, belly to the sun.<br>fully committed. do not touch.</p>
+    <p class="nap-time">3 hrs</p>
+  </section>
+
+  <div class="divider"><span>the classics</span></div>
+
+  <section class="nap-grid" id="grid" aria-label="Classic sleep positions"></section>
+
+  <section class="order" id="order" aria-label="Your order" aria-live="polite"></section>
+
+  <p class="tiny" style="text-align:center">no reservations · walk-ins to the couch welcome</p>
+  <div class="foot-links">
+    <a href="index.html">← home</a>
+    <a href="wardrobe.html">wardrobe →</a>
+  </div>
+</main>
+
+<script>
+(function () {
+  var NAPS = {
+    roach:   { name: 'The Roach', mins: 180 },
+    chin:    { name: 'The Chin Rest', tag: 'light', desc: 'head on the ledge, eyes on your snack', mins: 20, img: 'chin.webp', alt: 'Betsy in a blue coat resting her chin on the edge of her bed' },
+    pretzel: { name: 'The Lady Pretzel', tag: 'light', desc: 'legs crossed, coat on, judging you', mins: 60, img: 'pretzel.webp', alt: 'Betsy in a lilac puffer lying with her long legs crossed' },
+    pillow:  { name: 'The Pillow Hug', tag: 'deep', desc: 'face in cushion. do not disturb.', mins: 120, img: 'pillow.webp', alt: 'Betsy with her face pressed into a couch cushion' },
+    lap:     { name: 'The Lap Lean', tag: 'warm', desc: 'requires one human hand (yours)', mins: null, img: 'lap.webp', alt: 'Close-up of Betsy leaning her head into a hand' }
+  };
+  var ADDONS = [
+    { id: 'blanket', label: 'blanket', mins: 30, note: '+30 min, tucked in' },
+    { id: 'belly', label: 'belly rub', mins: 15, note: '+15 min of bliss' },
+    { id: 'coat', label: 'coat on', mins: 20, note: '+20 min, extra cosy' },
+    { id: 'snack', label: 'snack after', mins: 0, note: 'free (she insists)' }
+  ];
+  var state = { picked: null, placed: false, addons: { snack: true } };
+
+  function fmt(m) {
+    if (m === null) return 'forever';
+    var h = Math.floor(m / 60), r = m % 60;
+    if (!h) return r + ' min';
+    return h + (h === 1 ? ' hr' : ' hrs') + (r ? ' ' + r + ' min' : '');
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // build the classics grid once
+  var grid = document.getElementById('grid');
+  grid.innerHTML = ['chin', 'pretzel', 'pillow', 'lap'].map(function (id) {
+    var n = NAPS[id];
+    return '<div class="nap-card">' +
+      '<button class="nap-btn" type="button" data-nap="' + id + '" aria-pressed="false" aria-label="Choose ' + esc(n.name) + '">' +
+      '<img src="assets/img/' + n.img + '" alt="' + esc(n.alt) + '" loading="lazy"><span class="fx"></span></button>' +
+      '<span class="pill">' + n.tag + '</span><h3>' + esc(n.name) + '</h3>' +
+      '<p class="nap-desc">' + esc(n.desc) + '</p><p class="nap-time">' + fmt(n.mins) + '</p></div>';
+  }).join('');
+
+  var FX = '<span class="z" style="left:62%;top:32%;font-size:20px;animation-delay:0s">z</span>' +
+           '<span class="z" style="left:70%;top:24%;font-size:26px;animation-delay:.8s">z</span>' +
+           '<span class="z" style="left:78%;top:16%;font-size:34px;animation-delay:1.6s">Z</span>' +
+           '<span class="stamp-yes" aria-hidden="true">yes!</span>';
+
+  function renderPicks() {
+    document.querySelectorAll('.nap-btn').forEach(function (b) {
+      var on = b.dataset.nap === state.picked;
+      b.setAttribute('aria-pressed', on);
+      b.querySelector('.fx').innerHTML = on ? FX : '';
+      var img = b.querySelector('img');
+      if (b.dataset.nap !== 'roach') {
+        img.classList.remove('wiggle');
+        if (on) { void img.offsetWidth; img.classList.add('wiggle'); }
+      }
+    });
+    document.getElementById('flip-note').textContent = state.picked === 'roach' ? "look, now she's the right way up" : '';
+  }
+
+  function totals() {
+    var base = state.picked ? NAPS[state.picked].mins : 0, extra = 0, lines = [];
+    ADDONS.forEach(function (a) {
+      if (state.addons[a.id]) { extra += a.mins; lines.push({ label: a.label, amount: a.mins ? '+' + a.mins + ' min' : 'free' }); }
+    });
+    return { base: base, total: base === null ? null : base + extra, lines: lines };
+  }
+
+  var PAW = '<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><g fill="currentColor"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><ellipse cx="5.5" cy="10" rx="2.1" ry="2.7"/><ellipse cx="9.5" cy="6.5" rx="2.1" ry="2.8"/><ellipse cx="14.5" cy="6.5" rx="2.1" ry="2.8"/><ellipse cx="18.5" cy="10" rx="2.1" ry="2.7"/></g></svg>';
+
+  function renderOrder() {
+    var el = document.getElementById('order');
+    if (!state.picked) { el.innerHTML = '<p class="order__empty">tap a nap to start your order</p>'; return; }
+    var nap = NAPS[state.picked], t = totals();
+    if (!state.placed) {
+      el.innerHTML = '<div class="pop" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:14px">' +
+        '<p class="kicker">your nap</p><p class="order__name">' + esc(nap.name) + '</p>' +
+        '<p class="kicker" style="margin-top:4px">— add-ons —</p>' +
+        '<div class="addons">' + ADDONS.map(function (a) {
+          var on = !!state.addons[a.id];
+          return '<button class="addon" type="button" data-addon="' + a.id + '" aria-pressed="' + on + '"><b>' + (on ? '✓ ' : '+ ') + a.label + '</b><span>' + a.note + '</span></button>';
+        }).join('') + '</div>' +
+        '<p class="total">total nap: <strong>' + fmt(t.total) + '</strong></p>' +
+        '<button class="btn" type="button" data-action="place">Place order</button></div>';
+      return;
+    }
+    var no = Math.floor(100 + Math.random() * 900);
+    el.innerHTML = '<div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:16px">' +
+      '<div class="printer" aria-hidden="true"></div>' +
+      '<div class="receipt" role="group" aria-label="Your nap receipt">' +
+        '<p class="receipt__head">BETSY\'S NAP CO.</p>' +
+        '<p class="receipt__meta">the couch, by the window · order #' + no + '</p><hr>' +
+        '<div class="row" style="font-weight:700"><span>1 × ' + esc(nap.name) + '</span><span>' + fmt(t.base) + '</span></div>' +
+        t.lines.map(function (l) { return '<div class="row sub"><span>+ ' + l.label + '</span><span>' + l.amount + '</span></div>'; }).join('') +
+        '<hr><div class="row" style="font-weight:700;font-size:14px"><span>TOTAL NAP</span><span>' + fmt(t.total) + '</span></div>' +
+        '<div class="row"><span>paid in</span><span>treats</span></div><hr>' +
+        '<p class="receipt__thanks">tip in snacks, please.<br>thank you, come nap again</p>' +
+        '<div class="paw-stamp">' + PAW + '<span>APPROVED</span></div>' +
+      '</div>' +
+      '<p class="asleep pop">Betsy is already asleep.</p>' +
+      '<button class="btn btn--ghost" type="button" data-action="reset">order another nap</button></div>';
+  }
+
+  document.addEventListener('click', function (e) {
+    var nap = e.target.closest('[data-nap]');
+    if (nap) { state.picked = nap.dataset.nap; state.placed = false; renderPicks(); renderOrder(); return; }
+    var add = e.target.closest('[data-addon]');
+    if (add) { state.addons[add.dataset.addon] = !state.addons[add.dataset.addon]; renderOrder(); document.querySelector('[data-addon="' + add.dataset.addon + '"]').focus(); return; }
+    var act = e.target.closest('[data-action]');
+    if (!act) return;
+    if (act.dataset.action === 'place') { state.placed = true; renderOrder(); }
+    if (act.dataset.action === 'reset') {
+      state = { picked: null, placed: false, addons: { snack: true } };
+      renderPicks(); renderOrder();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+
+  renderPicks(); renderOrder();
+})();
+</script>
+</body>
+</html>

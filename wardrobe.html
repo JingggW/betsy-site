@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Betsy's Wardrobe</title>
+<meta name="description" content="The couch collection: Betsy's coats, and how each one ends.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23B03F69'%3E%3Cellipse cx='12' cy='16' rx='5' ry='4.2'/%3E%3Cellipse cx='5.5' cy='10' rx='2.1' ry='2.7'/%3E%3Cellipse cx='9.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='14.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='18.5' cy='10' rx='2.1' ry='2.7'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="Main">
+  <a class="nav__brand" href="index.html">Betsy</a>
+  <div class="nav__links">
+    <a href="naps.html">Naps</a>
+    <a href="wardrobe.html" aria-current="page">Wardrobe</a>
+  </div>
+</nav>
+
+<main class="col" style="gap:24px">
+  <header class="page-head">
+    <p class="kicker">autumn / winter · the couch collection</p>
+    <h1>The <em>Wardrobe</em></h1>
+    <p class="hand">cold-weather couture for a lady<br>who refuses to be chilly</p>
+    <div class="rule"></div>
+  </header>
+
+  <section aria-label="Lookbook" style="display:flex;flex-direction:column;gap:14px">
+    <div class="look-photo" id="photo"></div>
+    <div class="tabs" id="tabs" role="group" aria-label="Photo">
+      <button type="button" data-tab="look" aria-pressed="true">the look</button>
+      <button type="button" data-tab="end" aria-pressed="false">how it ends</button>
+    </div>
+    <div class="picker">
+      <button class="arrow" type="button" data-step="-1" aria-label="Previous look">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="swatches" id="swatches" role="group" aria-label="Choose a coat"></div>
+      <button class="arrow" type="button" data-step="1" aria-label="Next look">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <section class="look-info" id="info" aria-live="polite"></section>
+
+  <div class="divider"><span>signature accessory</span></div>
+
+  <section class="accessory" aria-label="Signature accessory">
+    <img src="assets/img/coat-collar.webp" alt="Close-up of Betsy asleep wearing her blue polka-dot collar" loading="lazy">
+    <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+      <h2>The Polka-Dot Collar</h2>
+      <p class="hand">worn with every single look. goes with lilac, goes with pink, goes with naps.</p>
+      <small>non-negotiable</small>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    <p class="hand">all coats tested on the couch. most end up half off.</p>
+    <div class="foot-links">
+      <a href="index.html">← home</a>
+      <a href="naps.html">nap menu →</a>
+    </div>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var LOOKS = [
+    { name: 'Lilac Gloss Puffer', swatch: '#C9B6E4',
+      img: 'coat-lilac.webp', alt: 'Betsy lounging in a glossy lilac puffer with pink trim',
+      after: 'coat-lilac_after.webp', afterAlt: 'Betsy in the lilac puffer leaning her head into a hand',
+      caption: 'patent lilac with a pink lining. a little bit disco.', afterCaption: 'ends up leaning into your hand for pats.',
+      fabric: 'glossy quilted nylon', warmth: 3, bestFor: 'couch lounging, being admired', verdict: 'very chic, very her' },
+    { name: 'Cobalt Café Puffer', swatch: '#2F6FD6',
+      img: 'coat-cobalt.webp', alt: 'Betsy standing in a bright cobalt blue puffer, looking up',
+      after: 'coat-cobalt_after.webp', afterAlt: 'Betsy flat out on a café floor in the blue puffer',
+      caption: 'the everyday coat. café-approved.', afterCaption: 'arrives at the café. lies down on the café floor.',
+      fabric: 'shiny quilted puffer', warmth: 3, bestFor: 'coffee runs, people-watching', verdict: 'a classic for a reason' },
+    { name: 'Raspberry Reversible', swatch: '#C2275B',
+      img: 'coat-rasp.webp', alt: 'Betsy asleep on the couch with a raspberry puffer draped half off her',
+      caption: 'two-tone, reversible, currently worn as a cape.',
+      fabric: 'lightweight down, pink on the inside', warmth: 4, bestFor: 'dramatic indoor naps', verdict: 'technically still wearing it' },
+    { name: 'Graduation Stripe Fleece', swatch: 'repeating-linear-gradient(0deg,#F2A6C8 0 4px,#FBE3EE 4px 8px)',
+      img: 'coat-stripe.webp', alt: 'Betsy on the couch next to her pink striped graduate fleece coat',
+      caption: 'her graduation robe. sentimental value: priceless.',
+      fabric: 'soft striped fleece, with patch', warmth: 2, bestFor: 'indoor ceremonies, memories', verdict: 'the one with a story' },
+    { name: 'Hot Pink Sherpa Coat', swatch: '#E8409A',
+      img: 'coat-hotpink.webp', alt: 'Betsy at the park in a hot pink coat with a cream sherpa collar',
+      after: 'coat-hotpink_after.webp', afterAlt: 'Betsy sprawled on her bed and the floor in the hot pink coat, legs in the air',
+      caption: 'sherpa collar, reflective piping, park-ready.', afterCaption: 'home from the park. instantly horizontal.',
+      fabric: 'waterproof shell, sherpa lining', warmth: 5, bestFor: 'cold winter walks', verdict: 'the warmest hug she owns' }
+  ];
+  var idx = 0, after = false;
+
+  // preload every photo so switching is instant
+  LOOKS.forEach(function (l) { [l.img, l.after].forEach(function (f) { if (f) { var i = new Image(); i.src = 'assets/img/' + f; } }); });
+
+  var sw = document.getElementById('swatches');
+  sw.innerHTML = LOOKS.map(function (l, i) {
+    return '<button class="swatch" type="button" data-look="' + i + '" aria-label="' + l.name + '" aria-pressed="false"><i style="background:' + l.swatch + '"></i></button>';
+  }).join('');
+
+  function render() {
+    var L = LOOKS[idx], end = after && !!L.after;
+    document.getElementById('photo').innerHTML =
+      '<img class="zoomin" src="assets/img/' + (end ? L.after : L.img) + '" alt="' + (end ? L.afterAlt : L.alt) + '">' +
+      '<span class="look-no">LOOK 0' + (idx + 1) + ' / 05</span>' +
+      (end ? '<span class="ends-tag">how it ends</span>' : '');
+    var tabs = document.getElementById('tabs');
+    tabs.hidden = !L.after;
+    tabs.querySelector('[data-tab="look"]').setAttribute('aria-pressed', !end);
+    tabs.querySelector('[data-tab="end"]').setAttribute('aria-pressed', end);
+    sw.querySelectorAll('.swatch').forEach(function (b, i) { b.setAttribute('aria-pressed', i === idx); });
+    var dots = '';
+    for (var k = 0; k < 5; k++) dots += k < L.warmth ? '●' : '○';
+    document.getElementById('info').innerHTML =
+      '<div class="pop" style="display:flex;flex-direction:column;gap:10px">' +
+      '<h2>' + L.name + '</h2><p class="hand">' + (end ? L.afterCaption : L.caption) + '</p>' +
+      '<dl class="specs"><dt>fabric</dt><dd>' + L.fabric + '</dd>' +
+      '<dt>warmth</dt><dd class="dots" aria-label="warmth ' + L.warmth + ' out of 5">' + dots + '</dd>' +
+      '<dt>best for</dt><dd>' + L.bestFor + '</dd>' +
+      '<dt>verdict</dt><dd class="verdict">' + L.verdict + '</dd></dl></div>';
+  }
+  function go(i) { idx = (i + LOOKS.length) % LOOKS.length; after = false; render(); }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-look],[data-step],[data-tab]');
+    if (!t) return;
+    if (t.dataset.look) go(+t.dataset.look);
+    else if (t.dataset.step) go(idx + +t.dataset.step);
+    else { after = t.dataset.tab === 'end'; render(); }
+  });
+  // swipe left / right on the photo
+  var x0 = null, photo = document.getElementById('photo');
+  photo.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  photo.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) go(idx + (dx < 0 ? 1 : -1));
+  });
+  render();
+})();
+</script>
+</body>
+</html>
