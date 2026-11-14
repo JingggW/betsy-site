@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Betsy's Wardrobe</title>
 <meta name="description" content="The couch collection: Betsy's coats, and how each one ends.">
+<meta name="theme-color" content="#F4ECDD">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Betsy's Wardrobe">
+<meta property="og:description" content="The couch collection: Betsy's coats, and how each one ends.">
+<meta property="og:url" content="https://betsy-site.pages.dev/wardrobe">
+<meta property="og:image" content="https://betsy-site.pages.dev/assets/img/betsy-watercolor.webp">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23B03F69'%3E%3Cellipse cx='12' cy='16' rx='5' ry='4.2'/%3E%3Cellipse cx='5.5' cy='10' rx='2.1' ry='2.7'/%3E%3Cellipse cx='9.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='14.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='18.5' cy='10' rx='2.1' ry='2.7'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -95,6 +102,7 @@
       fabric: 'waterproof shell, sherpa lining', warmth: 5, bestFor: 'cold winter walks', verdict: 'the warmest hug she owns' }
   ];
   var idx = 0, after = false;
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
 
   // preload every photo so switching is instant
   LOOKS.forEach(function (l) { [l.img, l.after].forEach(function (f) { if (f) { var i = new Image(); i.src = 'assets/img/' + f; } }); });
@@ -108,7 +116,7 @@
     var L = LOOKS[idx], end = after && !!L.after;
     document.getElementById('photo').innerHTML =
       '<img class="zoomin" src="assets/img/' + (end ? L.after : L.img) + '" alt="' + (end ? L.afterAlt : L.alt) + '">' +
-      '<span class="look-no">LOOK 0' + (idx + 1) + ' / 05</span>' +
+      '<span class="look-no">LOOK ' + pad(idx + 1) + ' / ' + pad(LOOKS.length) + '</span>' +
       (end ? '<span class="ends-tag">how it ends</span>' : '');
     var tabs = document.getElementById('tabs');
     tabs.hidden = !L.after;
@@ -133,6 +141,12 @@
     if (t.dataset.look) go(+t.dataset.look);
     else if (t.dataset.step) go(idx + +t.dataset.step);
     else { after = t.dataset.tab === 'end'; render(); }
+  });
+  // arrow keys switch looks (unless typing in a field)
+  document.addEventListener('keydown', function (e) {
+    if (e.altKey || e.ctrlKey || e.metaKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (e.key === 'ArrowLeft') go(idx - 1);
+    else if (e.key === 'ArrowRight') go(idx + 1);
   });
   // swipe left / right on the photo
   var x0 = null, photo = document.getElementById('photo');
