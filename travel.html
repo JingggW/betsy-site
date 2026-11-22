@@ -103,16 +103,21 @@ body{font-size:15px;line-height:1.55}
 /* list */
 .tr-list h2,.tr-section h2{font-family:var(--serif);font-weight:400;font-size:34px;margin:0 0 4px}
 .tr-count{font-family:var(--hand);font-size:22px;margin:0 0 14px}
-#grid.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
-.dest-card{font:inherit;text-align:left;background:transparent;border:1.5px solid var(--ink);border-radius:14px;padding:14px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:6px;min-height:44px}
-.dest-card:hover{background:#FBF7EF}
+#grid.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.dest-card{font:inherit;text-align:left;background:#FBF7EF;border:1.5px solid var(--ink);border-radius:14px;padding:14px 16px 12px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:4px;min-height:44px}
+.dest-card:hover{background:#fff}
 .dest-card[aria-current="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink) inset}
-.dest-card .nm{font-family:var(--serif);font-size:24px;line-height:1.1}
-.dest-card .meta{font-size:14px;color:var(--muted);line-height:1.4}
-.dest-card .price{font-weight:700;font-size:16px}
-.dest-card .price small{font-weight:400;font-size:12px;color:var(--muted)}
+.dest-card .top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.dest-card .mode{font-size:10px;letter-spacing:.1em;border:1px solid currentColor;border-radius:999px;padding:1px 8px}
+.dest-card .mode.drive{color:var(--muted)} .dest-card .mode.train{color:#4F7A55} .dest-card .mode.ferry{color:#3F6E8C} .dest-card .mode.fly{color:var(--t4)}
+.dest-card .nm{font-family:var(--serif);font-size:26px;line-height:1.05}
+.dest-card .meta{font-size:14px;color:var(--muted);line-height:1.35}
+.dest-card .foot{margin-top:auto;padding-top:10px;border-top:1px dashed var(--line);display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.dest-card .price{font-weight:700;font-size:20px;white-space:nowrap}
+.dest-card .price small{font-weight:400;font-size:12px;color:var(--muted);margin-left:6px;letter-spacing:.04em}
+.dest-card .price.q{font-size:14px;white-space:normal}
+.dest-card .unit{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .dest-card .nb{font-family:var(--text);font-size:13px;font-weight:600;color:var(--pink-dark)}
-.dest-card .tag{align-self:flex-start;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#fff;border-radius:999px;padding:2px 9px}
 .tr-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 16px;padding:12px;border:1.5px dashed var(--line);border-radius:14px}
 .tr-toolbar .viewbtns{margin-left:auto}
 @media (min-width:761px){.tr-toolbar{flex-wrap:nowrap}.tr-toolbar .tr-chips{flex-wrap:nowrap}}
@@ -132,11 +137,9 @@ body{font-size:15px;line-height:1.55}
 .tbl .mode{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:1px 8px;white-space:nowrap}
 .tbl .mode.drive{color:var(--muted)} .tbl .mode.train{color:#4F7A55} .tbl .mode.ferry{color:#3F6E8C} .tbl .mode.fly{color:var(--t4)}
 .tbl .sub{font-size:12px;color:var(--muted)}
-.dest-card .tag.dist{background:transparent;color:var(--ink);border:1.5px solid var(--ink);font-weight:700}
 .betsy{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:1px 7px;margin:0 6px 2px 0}
 .betsy.no{background:var(--pink-soft);color:var(--pink-dark)}
 .betsy.maybe{background:#F3E6C8;color:#7A5A16}
-.dest-card .betsy{align-self:flex-start}
 .opt .note,.yesno li,.tip,.dest-card .meta,.tbl td,.tr-lede,.rule-card p,.tr-receipt-copy p:not(.kick):not(.tr-hand){font-family:var(--text)}
 .tr-empty{font-family:var(--hand);font-size:24px;text-align:center;color:var(--muted)}
 
@@ -518,11 +521,12 @@ body{font-size:15px;line-height:1.55}
       grid.innerHTML = list.map(function (d) {
         var o = bestOpt(d);
         return '<button class="dest-card" type="button" data-pick="' + d.id + '" aria-current="' + (state.sel === d.id) + '">' +
-          '<span class="tag dist">' + kmText(d) + '</span>' +
+          '<span class="top"><span>' + kmText(d) + '</span><span class="mode ' + o.mode + '">' + o.mode + '</span></span>' +
           '<span class="nm">' + d.name + '</span>' +
-          '<span class="price">' + priceText(o) + '<small> for the dog</small></span>' +
-          '<span class="meta">' + o.what + ', ~' + fmtHrs(o.hrs) + '</span>' +
-          (o.big === false ? '<span class="nb">✕ not for Betsy</span>' : '') + '</button>';
+          '<span class="meta">' + o.what + ' · ~' + fmtHrs(o.hrs) + '</span>' +
+          (o.big === false ? '<span class="nb">✕ not for Betsy</span>' : '') +
+          '<span class="foot"><span class="price' + (o.cost === null ? ' q' : '') + '">' + (o.mode === 'drive' && o.cost === 0 ? '$0<small>+ human labour</small>' : o.costText) + '</span>' +
+          '<span class="unit">dog, one way</span></span></button>';
       }).join('');
       return;
     }
