@@ -17,7 +17,7 @@ Connected to this GitHub repo — every push to `main` deploys automatically.
 
 Build settings: framework preset **None**, build command **`node scripts/prerender.mjs`**, output directory **/** (repo root).
 
-`scripts/prerender.mjs` copies the places from `data/destinations.js` into `travel.html` as plain HTML (between the `prerender` comments) so crawlers that don't run JavaScript see them, and bumps the travel `<lastmod>` in `sitemap.xml`. Run it locally after editing the data if you want the committed copy fresh; the deploy runs it anyway.
+`scripts/prerender.mjs` copies the places from `data/destinations.js` into `travel.html` as plain HTML (between the `prerender` comments) so crawlers that don't run JavaScript see them, and bumps the travel `<lastmod>` in `sitemap.xml`. The repo keeps that block empty; it is filled in on every deploy. Run the script locally only to preview it (then don't commit the result).
 
 Social preview tags (assets/img/og.jpg) and canonical URLs point at `https://betsy-site.pages.dev`. If the site moves to a
 custom domain, update the `og:url` / `og:image` tags in the three HTML pages.
