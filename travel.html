@@ -357,10 +357,10 @@ body{font-size:15px;line-height:1.55}
     { id: 'any', label: 'Whatever it takes', max: Infinity }
   ];
   var MODES = [ { id: 'drive', label: 'drive' }, { id: 'train', label: 'train' }, { id: 'ferry', label: 'ferry' }, { id: 'fly', label: 'fly' } ];
-  // which explore view to show: remembered per browser; map on wide screens, cards on phones
+  // which explore view to show: remembered per browser, map by default
   function initialLayout() {
     try { var v = localStorage.getItem('betsy-travel-layout'); if (v === 'map' || v === 'cards' || v === 'table') return v; } catch (e) {}
-    return window.innerWidth < 760 ? 'cards' : 'map';
+    return 'map';
   }
   var state = { time: 'any', budget: 'any', view: 'near', sel: 'tasmania', modes: { drive: true, train: true, ferry: true, fly: true }, big: false, sort: 'dist', layout: initialLayout() };
 
