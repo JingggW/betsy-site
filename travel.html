@@ -43,7 +43,7 @@ body{font-size:15px;line-height:1.55}
 .tr-lede b{color:var(--ink)}
 
 /* filters */
-.tr-filters{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tr-filters{display:flex;flex-wrap:wrap;gap:18px 40px}
 .tr-fgroup{display:flex;flex-direction:column;gap:8px}
 .tr-fgroup > span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .tr-chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -119,8 +119,15 @@ body{font-size:15px;line-height:1.55}
 .srcs a::after{content:" \2197";color:var(--muted);font-size:12px}
 
 /* list */
-.tr-list h2,.tr-section h2{font-family:var(--serif);font-weight:400;font-size:34px;margin:0 0 4px}
-.tr-count{font-family:var(--hand);font-size:22px;margin:0 0 14px}
+.tr-explore h2,.tr-section h2{font-family:var(--serif);font-weight:400;font-size:34px;margin:0 0 4px}
+.tr-count{font-family:var(--hand);font-size:22px;margin:0}
+.tr-explore{display:flex;flex-direction:column;gap:16px}
+.tr-exbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 20px}
+.tr-exctl{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;padding:3px;gap:2px}
+.seg button{font:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:transparent;color:var(--ink);border:0;border-radius:999px;padding:0 16px;min-height:38px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--pink);color:#fff}
+.seg button:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
 #grid.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
 .dest-card{font:inherit;text-align:left;background:#FBF7EF;border:1.5px solid var(--ink);border-radius:14px;padding:14px 16px 12px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:4px;min-height:44px}
 .dest-card:hover{background:#fff}
@@ -136,9 +143,6 @@ body{font-size:15px;line-height:1.55}
 .dest-card .price.q{font-size:14px;white-space:normal}
 .dest-card .unit{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .dest-card .nb{font-family:var(--text);font-size:13px;font-weight:600;color:var(--pink-dark)}
-.tr-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 16px;padding:12px;border:1.5px dashed var(--line);border-radius:14px}
-.tr-toolbar .viewbtns{margin-left:auto}
-@media (min-width:761px){.tr-toolbar{flex-wrap:nowrap}.tr-toolbar .tr-chips{flex-wrap:nowrap}}
 .tr-sort{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .tr-sort select{font:inherit;font-size:14px;color:var(--ink);background:transparent;border:1.5px solid var(--ink);border-radius:8px;padding:8px 10px;min-height:44px}
 .tbl-wrap{overflow-x:auto;border:1.5px solid var(--ink);border-radius:14px}
@@ -194,7 +198,8 @@ body{font-size:15px;line-height:1.55}
 .tr-foot .tiny{font-size:12px;color:var(--muted);max-width:640px}
 
 @media (max-width:760px){
-  .tr-filters,.tr-detail,.tr-receipt-wrap{grid-template-columns:1fr}
+  .tr-detail,.tr-receipt-wrap{grid-template-columns:1fr}
+  .tr-filters{flex-direction:column}
   .tr-detail{padding:16px}
 }
 @media (prefers-reduced-motion:no-preference){
@@ -233,9 +238,39 @@ body{font-size:15px;line-height:1.55}
       <span id="lbl-budget">Dog's ticket, one way</span>
       <div class="tr-chips" role="group" aria-labelledby="lbl-budget" id="f-budget"></div>
     </div>
+    <div class="tr-fgroup">
+      <span id="lbl-mode">Way to travel</span>
+      <div class="tr-chips">
+        <div class="tr-chips" role="group" aria-labelledby="lbl-mode" id="f-mode"></div>
+        <button class="chip" type="button" id="f-big" aria-pressed="false">big dogs ok</button>
+      </div>
+    </div>
   </section>
 
-  <section class="tr-mapwrap" aria-label="Map of destinations">
+  <section class="tr-explore" aria-labelledby="explore-h">
+    <div class="tr-exbar">
+      <div class="tr-exhead">
+        <h2 id="explore-h">Where she could go</h2>
+        <p class="tr-count" id="count" aria-live="polite"></p>
+      </div>
+      <div class="tr-exctl">
+        <label class="tr-sort" id="sort-wrap">sort
+          <select id="f-sort">
+            <option value="dist">closest first</option>
+            <option value="cost">cheapest first</option>
+            <option value="hrs">fastest first</option>
+            <option value="name">A to Z</option>
+          </select>
+        </label>
+        <div class="seg" role="group" aria-label="Show as">
+          <button type="button" data-layout="map" aria-pressed="false">map</button>
+          <button type="button" data-layout="cards" aria-pressed="false">cards</button>
+          <button type="button" data-layout="table" aria-pressed="false">table</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tr-mapwrap" id="pane-map">
     <div class="tr-mapbar">
       <div class="viewbtns" role="group" aria-label="Map view">
         <button class="viewbtn" type="button" data-view="town" aria-pressed="false">Around town</button>
@@ -254,29 +289,10 @@ body{font-size:15px;line-height:1.55}
       </div>
     </div>
     <svg id="map" role="group" aria-label="Destinations reachable with a dog from Melbourne" viewBox="345 318 114 65" preserveAspectRatio="xMidYMid meet"></svg>
-  </section>
-
-  <section class="tr-detail" id="detail" aria-live="polite"></section>
-
-  <section class="tr-list" aria-label="Matching destinations">
-    <h2>Where she could go</h2>
-    <p class="tr-count" id="count"></p>
-    <div class="tr-toolbar">
-      <div class="tr-chips" role="group" aria-label="Way to travel" id="f-mode"></div>
-      <button class="chip" type="button" id="f-big" aria-pressed="false">big dogs ok</button>
-      <label class="tr-sort">sort
-        <select id="f-sort">
-          <option value="dist">closest first</option>
-          <option value="cost">cheapest first</option>
-          <option value="hrs">fastest first</option>
-          <option value="name">A to Z</option>
-        </select>
-      </label>
-      <div class="viewbtns" role="group" aria-label="Layout">
-        <button class="viewbtn" type="button" data-layout="cards" aria-pressed="true">cards</button>
-        <button class="viewbtn" type="button" data-layout="table" aria-pressed="false">table</button>
-      </div>
     </div>
+
+    <div class="tr-detail" id="detail" aria-live="polite"></div>
+
     <div id="grid"></div>
   </section>
 
@@ -341,7 +357,12 @@ body{font-size:15px;line-height:1.55}
     { id: 'any', label: 'Whatever it takes', max: Infinity }
   ];
   var MODES = [ { id: 'drive', label: 'drive' }, { id: 'train', label: 'train' }, { id: 'ferry', label: 'ferry' }, { id: 'fly', label: 'fly' } ];
-  var state = { time: 'any', budget: 'any', view: 'near', sel: 'tasmania', modes: { drive: true, train: true, ferry: true, fly: true }, big: false, sort: 'dist', layout: 'cards' };
+  // which explore view to show: remembered per browser; map on wide screens, cards on phones
+  function initialLayout() {
+    try { var v = localStorage.getItem('betsy-travel-layout'); if (v === 'map' || v === 'cards' || v === 'table') return v; } catch (e) {}
+    return window.innerWidth < 760 ? 'cards' : 'map';
+  }
+  var state = { time: 'any', budget: 'any', view: 'near', sel: 'tasmania', modes: { drive: true, train: true, ferry: true, fly: true }, big: false, sort: 'dist', layout: initialLayout() };
 
   // ---------- geometry ----------
   function P(lon, lat) { return [(lon - 112) * 12, (-lat - 10) * 12]; }
@@ -538,9 +559,7 @@ body{font-size:15px;line-height:1.55}
 
   function renderList() {
     var list = D.filter(matches), grid = document.getElementById('grid');
-    document.getElementById('count').textContent = list.length
-      ? list.length + (list.length === 1 ? ' place fits.' : ' places fit.') + ' tap one.'
-      : 'nothing fits. maybe just nap at home?';
+    if (state.layout === 'map') { grid.innerHTML = ''; return; }
     grid.className = state.layout === 'table' ? '' : 'cards';
     if (!list.length) { grid.innerHTML = '<p class="tr-empty">try a bigger budget, more time off, or another way to travel</p>'; return; }
     if (state.layout === 'cards') {
@@ -582,11 +601,22 @@ body{font-size:15px;line-height:1.55}
     document.getElementById('f-sort').value = state.sort;
     document.querySelectorAll('[data-layout]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.layout === state.layout); });
     document.querySelectorAll('[data-view]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.view === state.view); });
-    drawMap(); renderDetail(animate); renderList();
+    var isMap = state.layout === 'map', n = D.filter(matches).length;
+    document.getElementById('pane-map').hidden = !isMap;
+    document.getElementById('grid').hidden = isMap;
+    document.getElementById('sort-wrap').hidden = isMap;
+    // in cards/table the detail panel waits until someone picks a place, so the list comes first
+    document.getElementById('detail').hidden = !isMap && !userPicked;
+    document.getElementById('count').textContent = n
+      ? n + (n === 1 ? ' place fits.' : ' places fit.') + (isMap ? ' tap a dot.' : ' tap one.')
+      : 'nothing fits. maybe just nap at home?';
+    if (isMap) drawMap();
+    renderDetail(animate); renderList();
   }
 
+  var userPicked = false;
   function select(id, opts) {
-    state.sel = id;
+    state.sel = id; userPicked = true;
     var dd = D.filter(function (x) { return x.id === id; })[0];
     var okB = function (o) { return o.big !== false; }, byCost = function (x, y) { return (x.cost === null ? 1e9 : x.cost) - (y.cost === null ? 1e9 : y.cost); };
     var bo = matchingOpts(dd).filter(okB).sort(byCost)[0] || dd.opts.filter(okB).sort(byCost)[0] || dd.opts[0];
@@ -607,7 +637,11 @@ body{font-size:15px;line-height:1.55}
       if (!state.modes.drive && !state.modes.train && !state.modes.ferry && !state.modes.fly) state.modes[t.dataset.mode] = true; // keep at least one
       renderAll(); return;
     }
-    if (t.dataset.layout) { state.layout = t.dataset.layout; renderAll(); return; }
+    if (t.dataset.layout) {
+      state.layout = t.dataset.layout;
+      try { localStorage.setItem('betsy-travel-layout', state.layout); } catch (e) {}
+      renderAll(); return;
+    }
     if (t.dataset.time) { state.time = t.dataset.time; renderAll(); }
     else if (t.dataset.budget) { state.budget = t.dataset.budget; renderAll(); }
     else if (t.dataset.view) { state.view = t.dataset.view; renderAll(); }
@@ -622,7 +656,9 @@ body{font-size:15px;line-height:1.55}
   var rz;
   window.addEventListener('resize', function () {
     clearTimeout(rz);
-    rz = setTimeout(function () { if (Math.abs(svg.getBoundingClientRect().width - lastW) > 40) drawMap(); }, 150);
+    rz = setTimeout(function () {
+      if (state.layout === 'map' && Math.abs(svg.getBoundingClientRect().width - lastW) > 40) drawMap();
+    }, 150);
   });
   svg.addEventListener('keydown', function (e) {
     var g = e.target.closest('.mk');
