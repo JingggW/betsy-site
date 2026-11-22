@@ -103,8 +103,18 @@ body{font-size:15px;line-height:1.55}
 .yesno .no li::before{content:"✕";position:absolute;left:2px;color:var(--pink);font-weight:700}
 .tip{background:var(--pink-soft);border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.45}
 .tip b{color:var(--pink-dark)}
-.srcs{font-size:12px;color:var(--muted);margin-top:10px}
-.srcs a{color:var(--muted)}
+.srcs{margin-top:16px;border-top:1px dashed var(--line)}
+.srcs summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.srcs summary::-webkit-details-marker{display:none}
+.srcs summary .lbl::after{content:"+";display:inline-block;width:1em;margin-left:6px;color:var(--pink);font-weight:700}
+.srcs[open] summary .lbl::after{content:"\2212"}
+.srcs summary:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.srcs ul{margin:0 0 4px!important;gap:10px!important}
+.yesno .srcs li{padding-left:0;font-size:14px;line-height:1.35;display:flex;flex-direction:column;gap:1px}
+.srcs .pub{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.srcs a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.srcs a:hover{color:var(--pink);border-bottom-color:var(--pink)}
+.srcs a::after{content:" \2197";color:var(--muted);font-size:12px}
 
 /* list */
 .tr-list h2,.tr-section h2{font-family:var(--serif);font-weight:400;font-size:34px;margin:0 0 4px}
@@ -468,7 +478,16 @@ body{font-size:15px;line-height:1.55}
   }
 
   // ---------- detail + list ----------
-  var srcLinks = function (d) { return d.src.map(function (k) { return '<a href="' + S[k].u + '" target="_blank" rel="noopener">' + S[k].t + '</a>'; }).join(' · '); };
+  // "Publisher: title" -> small publisher label above the linked title
+  function srcList(d) {
+    return '<details class="srcs"><summary><span class="lbl">Sources · ' + d.src.length + '</span>' +
+      (d.last_verified ? '<span>checked ' + fmtDate(d.last_verified) + '</span>' : '') + '</summary><ul>' +
+      d.src.map(function (k) {
+        var t = S[k].t, i = t.indexOf(': '), pub = i > 0 ? t.slice(0, i) : '', title = i > 0 ? t.slice(i + 2) : t;
+        return '<li>' + (pub ? '<span class="pub">' + pub + '</span>' : '') +
+          '<span><a href="' + S[k].u + '" target="_blank" rel="noopener">' + title + '</a></span></li>';
+      }).join('') + '</ul></details>';
+  }
 
   function renderDetail(animate) {
     var d = D.filter(function (x) { return x.id === state.sel; })[0], box = document.getElementById('detail');
@@ -486,7 +505,7 @@ body{font-size:15px;line-height:1.55}
       '<div class="yesno"><h3>She can</h3><ul class="yes">' + d.yes.map(function (y) { return '<li>' + y + '</li>'; }).join('') + '</ul>' +
       '<h3>She can’t</h3><ul class="no">' + d.no.map(function (y) { return '<li>' + y + '</li>'; }).join('') + '</ul>' +
       (d.tip ? '<p class="tip"><b>tip:</b> ' + d.tip + '</p>' : '') +
-      (d.src.length ? '<p class="srcs">Sources: ' + srcLinks(d) + (d.last_verified ? '<br>Last checked ' + fmtDate(d.last_verified) : '') + '</p>' : '') + '</div>';
+      (d.src.length ? srcList(d) : '') + '</div>';
   }
 
   function km(d) {
