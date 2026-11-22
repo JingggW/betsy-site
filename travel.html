@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can Betsy come? Where a dog can go from Melbourne</title>
+<meta name="description" content="An explore map of where you can actually take a dog from Melbourne, how to get there, and what the dog's ticket costs.">
+<meta name="theme-color" content="#F4ECDD">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Can Betsy come?">
+<meta property="og:description" content="Where a dog can actually go from Melbourne, and what it costs. Checked 22 Nov 2026.">
+<meta property="og:url" content="https://betsy-site.pages.dev/travel">
+<meta property="og:image" content="https://betsy-site.pages.dev/assets/img/betsy-watercolor.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23B03F69'%3E%3Cellipse cx='12' cy='16' rx='5' ry='4.2'/%3E%3Cellipse cx='5.5' cy='10' rx='2.1' ry='2.7'/%3E%3Cellipse cx='9.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='14.5' cy='6.5' rx='2.1' ry='2.8'/%3E%3Cellipse cx='18.5' cy='10' rx='2.1' ry='2.7'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Caveat:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=3">
+<style>
+/* Travel-page styles. Shared tokens, nav and footer links come from assets/style.css. */
+:root{
+  --land:#EADFC9; --line:#D8CBB4;
+  --t1:#5E7F52; --t2:#B7862C; --t3:#B03F69; --t4:#5B3A57;
+  --text:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+}
+body{font-size:15px;line-height:1.55}
+
+.tr{max-width:1040px;margin:0 auto;padding:0 20px 60px;display:flex;flex-direction:column;gap:34px}
+.tr-head{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:8px}
+.tr-kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0}
+.tr-head h1{font-family:var(--serif);font-weight:400;font-size:clamp(44px,8vw,76px);line-height:1;margin:4px 0}
+.tr-head h1 em{color:var(--pink)}
+.tr-hand{font-family:var(--hand);font-size:24px;line-height:1.2;color:var(--ink);margin:0}
+.tr-rule{width:70px;height:2px;background:var(--pink);margin-top:10px}
+.tr-lede{max-width:640px;margin:0 auto;text-align:center;color:var(--muted)}
+.tr-lede b{color:var(--ink)}
+
+/* filters */
+.tr-filters{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tr-fgroup{display:flex;flex-direction:column;gap:8px}
+.tr-fgroup > span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tr-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;background:transparent;color:var(--ink);border:1.5px solid var(--ink);border-radius:999px;padding:9px 14px;min-height:44px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.chip:focus-visible,.dest-card:focus-visible,.viewbtn:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+
+/* map */
+.tr-mapwrap{position:relative;background:#F8F2E6;border:1.5px solid var(--ink);border-radius:18px;overflow:hidden}
+.tr-mapbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1.5px dashed var(--line);flex-wrap:wrap}
+.viewbtns{display:flex;gap:6px}
+.viewbtn{font:inherit;font-size:13px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:8px;padding:8px 12px;min-height:40px;cursor:pointer}
+.viewbtn[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:4px}
+.legend svg{vertical-align:middle;margin-right:4px}
+#map{display:block;width:100%;height:auto;touch-action:manipulation}
+#map .land{fill:var(--land);stroke:var(--ink);stroke-linejoin:round}
+#map .route{fill:none;stroke-linecap:round;opacity:.55}
+#map .route.drive{stroke:var(--muted)}
+#map .route.ferry{stroke:#3F6E8C}
+#map .route.fly{stroke:var(--t4)}
+#map .route.train{stroke:#4F7A55}
+#map .mk{cursor:pointer}
+#map .mk circle.dot{stroke:var(--paper)}
+#map .mk.sel circle.halo{fill:none;stroke:var(--pink);opacity:1}
+#map .mk circle.halo{opacity:0}
+#map .mk.dim{opacity:.18}
+#map .mk text{font-family:var(--mono);fill:var(--ink);paint-order:stroke;stroke:#F8F2E6;stroke-linejoin:round}
+#map .home text{font-family:var(--hand);fill:var(--pink);paint-order:stroke;stroke:#F8F2E6}
+#map .nogo text{font-family:var(--mono);fill:var(--muted);font-style:italic;paint-order:stroke;stroke:#F8F2E6}
+#map .nogo path{stroke:var(--muted)}
+#map .sea{font-family:var(--serif);font-style:italic;fill:#B9AC96}
+#map .mk:focus{outline:none}
+#map .mk:focus-visible circle.halo{opacity:1;stroke:var(--ink)}
+
+/* detail */
+.tr-detail{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;border:1.5px solid var(--ink);border-radius:18px;padding:22px;background:#FBF7EF}
+.tr-detail h2{font-family:var(--serif);font-weight:400;font-size:38px;line-height:1.05;margin:0}
+.tr-detail .where{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.tr-detail .blurb{font-family:var(--hand);font-size:22px;line-height:1.2;margin:8px 0 14px}
+.opt{display:grid;grid-template-columns:1fr auto;gap:2px 16px;align-items:baseline;padding:14px 0;border-top:1px dashed var(--line)}
+.opt:first-of-type{border-top:0}
+.opt .mode{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:1px 8px}
+.opt .mode.drive{color:var(--muted)} .opt .mode.train{color:#4F7A55} .opt .mode.ferry{color:#3F6E8C} .opt .mode.fly{color:var(--t4)}
+.opt .what{font-family:var(--text);font-weight:600;font-size:16px}
+.opt .what small{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.opt .cost{font-weight:700;font-size:17px;color:var(--ink);text-align:right;white-space:nowrap}
+.opt .note{grid-column:1 / 3;font-size:14px;color:var(--muted);line-height:1.45}
+.opt .nf{display:block;margin-top:4px;font-size:13px;font-style:italic}
+.opt .nb{display:block;margin-top:4px;color:var(--pink-dark);font-weight:600}
+.opt .nb.maybe{color:#7A5A16}
+.yesno h3{font-family:var(--serif);font-weight:400;font-size:22px;margin:0 0 6px}
+.yesno ul{margin:0 0 14px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.yesno li{padding-left:24px;position:relative;font-size:15px;line-height:1.45}
+.yesno .yes li::before{content:"✓";position:absolute;left:2px;color:var(--t1);font-weight:700}
+.yesno .no li::before{content:"✕";position:absolute;left:2px;color:var(--pink);font-weight:700}
+.tip{background:var(--pink-soft);border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.45}
+.tip b{color:var(--pink-dark)}
+.srcs{font-size:12px;color:var(--muted);margin-top:10px}
+.srcs a{color:var(--muted)}
+
+/* list */
+.tr-list h2,.tr-section h2{font-family:var(--serif);font-weight:400;font-size:34px;margin:0 0 4px}
+.tr-count{font-family:var(--hand);font-size:22px;margin:0 0 14px}
+#grid.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.dest-card{font:inherit;text-align:left;background:transparent;border:1.5px solid var(--ink);border-radius:14px;padding:14px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:6px;min-height:44px}
+.dest-card:hover{background:#FBF7EF}
+.dest-card[aria-current="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink) inset}
+.dest-card .nm{font-family:var(--serif);font-size:24px;line-height:1.1}
+.dest-card .meta{font-size:14px;color:var(--muted);line-height:1.4}
+.dest-card .price{font-weight:700;font-size:16px}
+.dest-card .price small{font-weight:400;font-size:12px;color:var(--muted)}
+.dest-card .nb{font-family:var(--text);font-size:13px;font-weight:600;color:var(--pink-dark)}
+.dest-card .tag{align-self:flex-start;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#fff;border-radius:999px;padding:2px 9px}
+.tr-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 16px;padding:12px;border:1.5px dashed var(--line);border-radius:14px}
+.tr-toolbar .viewbtns{margin-left:auto}
+@media (min-width:761px){.tr-toolbar{flex-wrap:nowrap}.tr-toolbar .tr-chips{flex-wrap:nowrap}}
+.tr-sort{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.tr-sort select{font:inherit;font-size:14px;color:var(--ink);background:transparent;border:1.5px solid var(--ink);border-radius:8px;padding:8px 10px;min-height:44px}
+.tbl-wrap{overflow-x:auto;border:1.5px solid var(--ink);border-radius:14px}
+.tbl{width:100%;border-collapse:collapse;font-size:15px;min-width:640px}
+.tbl .nb{color:var(--pink-dark);font-weight:600;font-size:14px} .tbl .nb.maybe{color:#7A5A16}
+.tbl th{text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:10px 12px;border-bottom:1.5px solid var(--ink);background:#FBF7EF;position:sticky;top:0}
+.tbl td{padding:12px;border-bottom:1px dashed var(--line);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr{cursor:pointer}
+.tbl tbody tr:hover,.tbl tbody tr:focus-visible{background:#FBF7EF;outline:none}
+.tbl tbody tr[aria-current="true"]{background:var(--pink-soft)}
+.tbl .nm{font-family:var(--serif);font-size:20px;line-height:1.1}
+.tbl .cost{font-weight:700;color:var(--ink);white-space:nowrap}
+.tbl .mode{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:1px 8px;white-space:nowrap}
+.tbl .mode.drive{color:var(--muted)} .tbl .mode.train{color:#4F7A55} .tbl .mode.ferry{color:#3F6E8C} .tbl .mode.fly{color:var(--t4)}
+.tbl .sub{font-size:12px;color:var(--muted)}
+.dest-card .tag.dist{background:transparent;color:var(--ink);border:1.5px solid var(--ink);font-weight:700}
+.betsy{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:1px 7px;margin:0 6px 2px 0}
+.betsy.no{background:var(--pink-soft);color:var(--pink-dark)}
+.betsy.maybe{background:#F3E6C8;color:#7A5A16}
+.dest-card .betsy{align-self:flex-start}
+.opt .note,.yesno li,.tip,.dest-card .meta,.tbl td,.tr-lede,.rule-card p,.tr-receipt-copy p:not(.kick):not(.tr-hand){font-family:var(--text)}
+.tr-empty{font-family:var(--hand);font-size:24px;text-align:center;color:var(--muted)}
+
+/* receipt */
+.tr-receipt-wrap{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:center}
+.receipt2{background:#fff;max-width:340px;margin:0 auto;padding:22px 20px 26px;font-size:13px;box-shadow:0 8px 24px rgba(58,46,38,.12);position:relative;
+  -webkit-mask:radial-gradient(circle 7px at 50% 100%,#0000 98%,#000) 50% 100% / 18px 100% repeat-x;mask:radial-gradient(circle 7px at 50% 100%,#0000 98%,#000) 50% 100% / 18px 100% repeat-x}
+.receipt2 .hd{text-align:center;font-weight:700;letter-spacing:.12em}
+.receipt2 .mt{text-align:center;color:var(--muted);font-size:12px;margin:2px 0 8px}
+.receipt2 hr{border:0;border-top:1.5px dashed var(--ink);margin:8px 0}
+.receipt2 .row{display:flex;justify-content:space-between;gap:10px;padding:2px 0}
+.receipt2 .row.b{font-weight:700}
+.receipt2 .row span:last-child{white-space:nowrap;text-align:right}
+.receipt2 .row.sub{color:var(--muted)}
+.receipt2 .ty{text-align:center;margin-top:10px;font-family:var(--hand);font-size:20px}
+.receipt2 .stamp.rej{border-color:var(--ink);color:var(--ink)}
+.opt .inv,.tr-detail .inv{margin-top:10px;font:inherit;font-family:var(--mono);font-size:13px;background:transparent;border:0;color:var(--pink);text-decoration:underline;cursor:pointer;padding:6px 0;min-height:32px;justify-self:start}
+.receipt2 .stamp{display:block;width:fit-content;margin:14px auto 0;transform:rotate(-12deg);border:2px solid var(--pink);color:var(--pink);border-radius:8px;padding:2px 8px;font-weight:700;letter-spacing:.1em;font-size:12px;opacity:.85}
+.tr-receipt-copy{display:flex;flex-direction:column;gap:10px}
+.tr-receipt-copy p{margin:0}
+.tr-receipt-copy .kick{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+@media (prefers-reduced-motion:no-preference){.receipt2.print{animation:tr-print .45s ease}@keyframes tr-print{from{transform:translateY(-10px);opacity:.3}to{transform:none;opacity:1}}}
+
+/* rules */
+.rules{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+@media (max-width:760px){.rules{grid-template-columns:1fr 1fr}}
+.rule-card{padding:18px 16px;border-left:1px dashed var(--line);display:flex;flex-direction:column;gap:6px}
+.rule-card:first-child{border-left:0}
+.rule-card .rn{font-family:var(--serif);font-style:italic;font-size:30px;line-height:1;color:var(--pink)}
+.rule-card h3{font-family:var(--serif);font-weight:400;font-size:22px;margin:0 0 6px;line-height:1.1}
+.rule-card p{margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
+
+.tr-foot{text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
+.tr-foot .tiny{font-size:12px;color:var(--muted);max-width:640px}
+
+@media (max-width:760px){
+  .tr-filters,.tr-detail,.tr-receipt-wrap{grid-template-columns:1fr}
+  .tr-detail{padding:16px}
+}
+@media (prefers-reduced-motion:no-preference){
+  #map .mk circle.halo{transition:opacity .2s}
+  .tr-detail.pop{animation:tr-pop .35s ease}
+  @keyframes tr-pop{from{transform:translateY(6px);opacity:.4}to{transform:none;opacity:1}}
+}
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Main">
+  <a class="nav__brand" href="index.html">Betsy</a>
+  <div class="nav__links">
+    <a href="naps.html">Naps</a>
+    <a href="wardrobe.html">Wardrobe</a>
+    <a href="travel.html" aria-current="page">Travel</a>
+  </div>
+</nav>
+
+<main class="tr">
+  <header class="tr-head">
+    <p class="tr-kicker">field notes · from the couch, outwards</p>
+    <h1>Can Betsy <em>come?</em></h1>
+    <p class="tr-hand">everywhere a dog can actually go from Melbourne,<br>and what her ticket costs</p>
+    <div class="tr-rule"></div>
+  </header>
+
+  <p class="tr-lede">Betsy's off to Tasmania in May. Turns out dogs can go further than we thought. <b>Dog-only prices, one way, checked 22 Nov 2026.</b></p>
+
+  <section class="tr-filters" aria-label="Filters">
+    <div class="tr-fgroup">
+      <span id="lbl-time">Time you've got</span>
+      <div class="tr-chips" role="group" aria-labelledby="lbl-time" id="f-time"></div>
+    </div>
+    <div class="tr-fgroup">
+      <span id="lbl-budget">Dog's ticket, one way</span>
+      <div class="tr-chips" role="group" aria-labelledby="lbl-budget" id="f-budget"></div>
+    </div>
+  </section>
+
+  <section class="tr-mapwrap" aria-label="Map of destinations">
+    <div class="tr-mapbar">
+      <div class="viewbtns" role="group" aria-label="Map view">
+        <button class="viewbtn" type="button" data-view="town" aria-pressed="false">Around town</button>
+        <button class="viewbtn" type="button" data-view="near" aria-pressed="true">Weekend away</button>
+        <button class="viewbtn" type="button" data-view="far" aria-pressed="false">All of Australia + NZ</button>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i style="background:var(--t1)"></i>free</span>
+        <span><i style="background:var(--t2)"></i>under $350</span>
+        <span><i style="background:var(--t3)"></i>under $1,000</span>
+        <span><i style="background:var(--t4)"></i>$1,000+</span>
+        <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#6B5D52" stroke-width="2"/></svg>drive</span>
+        <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#4F7A55" stroke-width="2" stroke-dasharray="9 2 1 2"/></svg>train</span>
+        <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#3F6E8C" stroke-width="2" stroke-dasharray="5 3"/></svg>ferry</span>
+        <span><svg width="22" height="6"><line x1="0" y1="3" x2="22" y2="3" stroke="#5B3A57" stroke-width="2" stroke-dasharray="1 4" stroke-linecap="round"/></svg>fly</span>
+      </div>
+    </div>
+    <svg id="map" role="group" aria-label="Destinations reachable with a dog from Melbourne" viewBox="345 318 114 65" preserveAspectRatio="xMidYMid meet"></svg>
+  </section>
+
+  <section class="tr-detail" id="detail" aria-live="polite"></section>
+
+  <section class="tr-list" aria-label="Matching destinations">
+    <h2>Where she could go</h2>
+    <p class="tr-count" id="count"></p>
+    <div class="tr-toolbar">
+      <div class="tr-chips" role="group" aria-label="Way to travel" id="f-mode"></div>
+      <button class="chip" type="button" id="f-big" aria-pressed="false">big dogs ok</button>
+      <label class="tr-sort">sort
+        <select id="f-sort">
+          <option value="dist">closest first</option>
+          <option value="cost">cheapest first</option>
+          <option value="hrs">fastest first</option>
+          <option value="name">A to Z</option>
+        </select>
+      </label>
+      <div class="viewbtns" role="group" aria-label="Layout">
+        <button class="viewbtn" type="button" data-layout="cards" aria-pressed="true">cards</button>
+        <button class="viewbtn" type="button" data-layout="table" aria-pressed="false">table</button>
+      </div>
+    </div>
+    <div id="grid"></div>
+  </section>
+
+  <section class="tr-section" aria-labelledby="receipt-h" id="invoice">
+    <h2 id="receipt-h">Betsy's travel invoice</h2>
+    <div class="tr-receipt-wrap">
+      <div class="tr-receipt-copy">
+        <p id="q-intro"></p>
+        <p class="kick">— how —</p>
+        <div class="tr-chips" role="group" aria-label="Way to travel" id="q-opt"></div>
+        <div id="q-cabin-wrap"><p class="kick">— cabin —</p><div class="tr-chips" role="group" aria-label="Cabin" id="q-cabin"></div></div>
+        <p class="kick">— trip —</p>
+        <div class="tr-chips" role="group" aria-label="Trip" id="q-trip"></div>
+        <p class="tr-hand" id="q-verdict"></p>
+      </div>
+      <div class="receipt2" role="group" aria-label="Trip invoice" id="q-receipt" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="tr-section" aria-labelledby="rules-h">
+    <h2 id="rules-h">House rules of the road</h2>
+    <div class="rules">
+      <div class="rule-card"><span class="rn">01</span><h3>National parks: no</h3><p>Most famous sights are inside one. Plan around them.</p></div>
+      <div class="rule-card"><span class="rn">02</span><h3>Tasmania: worm first</h3><p>Praziquantel within 14 days before you land. Keep the receipt.</p></div>
+      <div class="rule-card"><span class="rn">03</span><h3>Planes: 8 kg or cargo</h3><p>Only small dogs fly in the cabin. Big dogs go in the hold.</p></div>
+      <div class="rule-card"><span class="rn">04</span><h3>Trains: Melbourne yes</h3><p>Metro trains take any size on lead and muzzle, off-peak. V/Line: small dogs in a box. Long-distance trains and coaches: no.</p></div>
+    </div>
+  </section>
+
+  <footer class="tr-foot">
+    <p class="tiny">Distances are straight-line from Melbourne, not driving distance. Prices are dog-side costs only, one way, from operator sites and pet-transport price guides checked 22 Nov 2026. Fares move with season and demand, and pet-transport quotes depend on her weight and crate. Check with the operator before you book. Sources are listed under each place.</p>
+    <p class="tr-hand">tested on one greyhound. she slept through most of it.</p>
+    <div class="foot-links"><a href="wardrobe.html">← wardrobe</a><a href="index.html">home →</a></div>
+  </footer>
+</main>
+
+<script>
+(function () {
+  // ---------- data ----------
+  // opts: mode, what, hrs (one-way door-to-door-ish, for filtering), cost (dog-side, one way, AUD; low end of range), costText, note
+  var S = {
+    searoad: { t: 'Searoad Ferries', u: 'https://www.searoad.com.au/ferry' },
+    mornpen: { t: 'Mornington Peninsula Shire: dogs', u: 'https://www.mornpen.vic.gov.au/Your-Property/Animals-and-Pets/Dogs-on-the-Peninsula' },
+    pi: { t: 'Travelnuity: dog-friendly Phillip Island', u: 'https://www.travelnuity.com/dog-friendly-phillip-island/' },
+    piBeach: { t: 'Travelnuity: Phillip Island dog beach', u: 'https://www.travelnuity.com/?p=20325' },
+    gor: { t: 'GreatOceanRoad.com.au: dog-friendly trip', u: 'https://greatoceanroad.com.au/plan/dog-friendly/' },
+    apollo: { t: 'Travelnuity: dog-friendly Apollo Bay', u: 'https://www.travelnuity.com/dog-friendly-apollo-bay/' },
+    lorne: { t: 'Travelnuity: Lorne', u: 'https://www.travelnuity.com/?p=24278' },
+    sotRules: { t: 'Spirit of Tasmania: pet rules', u: 'https://www.spiritoftasmania.com.au/before-you-sail/travelling-with-pets/pet-rules-safety-and-behaviour/' },
+    pwsDogs: { t: 'Tasmania Parks: dogs in parks', u: 'https://parks.tas.gov.au/explore-our-parks/know-before-you-go/dogs-in-parks' },
+    ract: { t: 'RACT: dog-friendly Tasmania', u: 'https://ract.com.au/membership/journeys/experiences/tassie-tails-exploring-the-island-s-best-dog-friendly-adventures' },
+    tnTas: { t: 'Travelnuity: Tasmania with a dog', u: 'https://www.travelnuity.com/visit-tasmania-with-dog/' },
+    biosec: { t: 'Biosecurity Tasmania: dogs', u: 'https://nre.tas.gov.au/biosecurity-tasmania/travellers-guide-to-tasmanian-biosecurity-what-you-can-and-cant-bring-into-tasmania/animal-and-animal-products' },
+    pawmobile: { t: 'Pawmobile: regular services', u: 'https://pawmobile.com.au/our-services/our-regular-services/' },
+    sharp: { t: 'Sharp Airlines: freight & animal rates', u: 'https://sharpairlines.com.au/freight-services/sending' },
+    virgin: { t: 'Virgin Australia: Pets in Cabin', u: 'https://www.virginaustralia.com/au/en/travel-info/specific-travel/pets/pets-in-cabin/' },
+    dogmovers: { t: 'Dogmovers: 2026 interstate price guide', u: 'https://dogmovers.com.au/pet-transport-costs-australia/' },
+    kiPets: { t: 'SeaLink: taking pets to Kangaroo Island', u: 'https://www.sealink.com.au/kangaroo-island/visitor-information/taking-your-pets-to-ki/' },
+    kiFaq: { t: 'SeaLink KI FAQs', u: 'https://sealink.com.au/kangaroo-island/faqs' },
+    qf: { t: 'Travelnuity: flying a dog in Australia', u: 'https://www.travelnuity.com/flying-with-a-dog-in-australia/' },
+    maggie: { t: 'Travelnuity: dog-friendly Queensland islands', u: 'https://www.travelnuity.com/dog-friendly-islands-queensland/' },
+    maggiePolicy: { t: 'SeaLink Magnetic Island animals policy', u: 'https://sealink.com.au/magnetic-island/terms-and-conditions/magnetic-island-animals-policy' },
+    nullarbor: { t: 'Travelnuity: Nullarbor with a dog', u: 'https://www.travelnuity.com/dog-friendly-nullarbor/' },
+    ptv: { t: 'Transport Victoria: animals on public transport', u: 'https://transport.vic.gov.au/plan-a-journey/travel-tips-and-resources/bringing-items-on-public-transport/animals-on-public-transport' },
+    vline: { t: 'V/Line: bikes, luggage & animals', u: 'https://aws-public.vline.com.au/Fares-general-info/Bikes-Luggage-Animals' },
+    tnDay: { t: 'Travelnuity: dog-friendly day trips from Melbourne', u: 'https://www.travelnuity.com/dog-friendly-day-trips-melbourne/' },
+    tnTrains: { t: 'Travelnuity: dog-friendly historic train rides', u: 'https://www.travelnuity.com/dog-friendly-historic-train-rides-australia/' },
+    tnGetaway: { t: 'Travelnuity: dog-friendly getaways from Melbourne', u: 'https://www.travelnuity.com/dog-friendly-getaways-from-melbourne/' },
+    wpf: { t: 'Western Port Ferries: service info', u: 'https://westernportferries.com.au/service-updates' },
+    ppf: { t: 'Port Phillip Ferries: Geelong \u2194 Portarlington', u: 'https://www.portphillipferries.com.au/tickets-times/geelong-to-portarlington' },
+    uber: { t: 'Uber: Uber Pet goes national', u: 'https://www.uber.com/au/en/newsroom/uberpet-goes-national/' },
+    uberFee: { t: 'Uber: Uber Pet launch (surcharge)', u: 'https://www.uber.com/au/en/newsroom/uberpetgoesnational/' },
+    nz: { t: 'Travelnuity: flying a dog Australia to NZ', u: 'https://www.travelnuity.com/flying-a-dog-from-australia-to-nz/' },
+    mpi: { t: 'NZ MPI import health standard', u: 'https://www.mpi.govt.nz/dmsdocument/1575/send' }
+  };
+
+  var D = [
+    { id: 'mumsfriend', name: 'Mum\u2019s only friend\u2019s home', where: 'address: classified', lon: 144.96, lat: -37.54, views: ['town'], line: 'drive', lab: [8, -6, 'start'],
+      blurb: 'the most important destination on this map.',
+      opts: [
+        { mode: 'drive', what: 'Drive', hrs: 0.6, cost: 0, costText: '$0' },
+        { mode: 'drive', what: 'Uber Pet', hrs: 0.6, cost: 7, costText: '~$6\u20137 extra', note: 'Pet surcharge on top of the fare (launch pricing).' }
+      ],
+      yes: ['Everything, presumably', 'Her own spot on their couch'],
+      no: ['Being left at home'],
+      tip: 'Call ahead. Mum only has the one friend.',
+      src: ['uber', 'uberFee'] },
+    { id: 'altona', name: 'Altona Dog Beach', where: 'Melbourne \u00b7 west', lon: 144.83, lat: -37.87, views: ['town'], line: 'train', lab: [-8, -10, 'end'],
+      blurb: 'off lead, all day, all year. ten minutes from the couch.',
+      opts: [
+        { mode: 'train', what: 'Metro train (Altona)', hrs: 0.75, cost: 0, costText: '$0', note: 'Any size dog on a lead and muzzle. Avoid weekday peaks, 7\u20139am and 4\u20136pm.' },
+        { mode: 'drive', what: 'Drive', hrs: 0.4, cost: 0, costText: '$0' },
+        { mode: 'drive', what: 'Uber Pet', hrs: 0.5, cost: 7, costText: '~$6\u20137 extra', note: 'Pet surcharge on top of the fare (launch pricing).' }
+      ],
+      yes: ['Off lead all day, year round, on the beach and in the fenced PA Burns Reserve next door'],
+      no: ['Port Phillip Ferries (Docklands, Portarlington, Geelong): no pets'],
+      tip: 'Muzzle on for the train, off at the beach.',
+      src: ['tnDay', 'ptv', 'uber', 'uberFee', 'ppf'] },
+    { id: 'dandenongs', name: 'Dandenong Ranges', where: 'Melbourne \u00b7 east', lon: 145.35, lat: -37.91, views: ['town'], line: 'train', lab: [8, -8, 'start'],
+      blurb: 'hills and fern gullies, a train ride from the couch.',
+      opts: [
+        { mode: 'train', what: 'Metro train to Belgrave', hrs: 1.25, cost: 0, costText: '$0', note: 'Lead and muzzle, off-peak.' },
+        { mode: 'drive', what: 'Drive', hrs: 1, cost: 0, costText: '$0' }
+      ],
+      yes: ['Getting there by metro train, on lead and muzzle'],
+      no: ['Puffing Billy: its Dog Express no longer runs'],
+      src: ['tnTrains', 'ptv'] },
+    { id: 'macedon', name: 'Macedon Ranges', where: 'Victoria \u00b7 north-west', lon: 144.57, lat: -37.42, views: ['town'], line: 'drive', lab: [-8, -8, 'end'],
+      blurb: 'hikes in the hills. autumn leaves to sniff.',
+      opts: [
+        { mode: 'drive', what: 'Drive', hrs: 1, cost: 0, costText: '$0' },
+        { mode: 'train', what: 'V/Line', hrs: 1, cost: 0, costText: '$0', big: false, note: 'Small dogs only, in a box you can carry in one hand.' }
+      ],
+      yes: ['Macedon Regional Park: dog-friendly walks, from short strolls to all-day hikes'],
+      no: ['V/Line coaches: no pets'],
+      src: ['tnGetaway', 'vline'] },
+    { id: 'castlemaine', name: 'Castlemaine', where: 'Victoria \u00b7 goldfields', lon: 144.22, lat: -37.06, views: ['town'], line: 'drive', lab: [-8, 4, 'end'],
+      blurb: 'a gold-rush steam train, dogs welcome.',
+      opts: [
+        { mode: 'drive', what: 'Drive', hrs: 1.5, cost: 0, costText: '$0' },
+        { mode: 'train', what: 'V/Line', hrs: 1.5, cost: 0, costText: '$0', big: false, note: 'Small dogs only, in a box you can carry in one hand.' }
+      ],
+      yes: ['Victorian Goldfields Railway steam train: Excursion Class, usually one return trip Wednesday and two Sunday, at the station master\u2019s discretion'],
+      no: ['Big dogs on V/Line'],
+      src: ['tnTrains', 'vline'] },
+    { id: 'geelong', name: 'Geelong & Bellarine', where: 'Victoria \u00b7 south-west', lon: 144.36, lat: -38.15, views: ['town'], line: 'drive', lab: [-8, 4, 'end'],
+      blurb: 'the heritage train takes dogs. the fast ferry doesn\u2019t.',
+      opts: [
+        { mode: 'drive', what: 'Drive', hrs: 1, cost: 0, costText: '$0' },
+        { mode: 'train', what: 'V/Line', hrs: 1, cost: 0, costText: '$0', big: false, note: 'Small dogs only, in a box you can carry in one hand.' }
+      ],
+      yes: ['Bellarine Railway (Swan Bay Express) from Queenscliff: Sundays and most public holidays, free, and the dog gets her own ticket'],
+      no: ['Port Phillip Ferries from Docklands: no pets on board'],
+      src: ['tnTrains', 'ppf', 'vline'] },
+    { id: 'french', name: 'French Island', where: 'Western Port', lon: 145.35, lat: -38.35, views: ['town'], line: 'ferry', lab: [8, 4, 'start'],
+      blurb: 'a quiet island, if you stay out of the park.',
+      opts: [ { mode: 'ferry', what: 'Drive to Stony Point + Western Port Ferries', hrs: 1.75, cost: null, costText: 'dogs ok, ask fare', note: 'Ferries are cancelled in strong winds.' } ],
+      yes: ['Dogs on the ferry and on the island outside the national park'],
+      no: ['French Island National Park, about 70% of the island', 'No off-lead areas anywhere on the island'],
+      src: ['wpf'] },
+    { id: 'mornington', name: 'Mornington Peninsula', where: 'Victoria · Port Phillip', lon: 144.75, lat: -38.36, views: ['town','near'], line: 'ferry', lab: [-1.2, -0.9, 'end'],
+      blurb: 'the free ferry. dogs ride on deck, ears out.',
+      opts: [
+        { mode: 'drive', what: 'Drive down the peninsula', hrs: 1.5, cost: 0, costText: '$0' },
+        { mode: 'ferry', what: 'Searoad, Queenscliff → Sorrento', hrs: 0.7, cost: 0, costText: 'free', note: 'On a lead, outside decks only.' }
+      ],
+      yes: ['Searoad ferry, free, on lead, outside decks (water stations on board)', 'The Shire’s leash-free areas on the bay side'],
+      no: ['The Bass Strait coast is Mornington Peninsula National Park, so check Parks Victoria signs first'],
+      tip: 'Combine with the Great Ocean Road: drive one way, ferry back.',
+      src: ['searoad', 'mornpen'] },
+    { id: 'phillip', name: 'Phillip Island', where: 'Victoria · Bass Coast', lon: 145.24, lat: -38.48, views: ['town','near'], line: 'drive', lab: [1.3, 0.6, 'start'],
+      blurb: 'one beach where she can run all day, every day of the year.',
+      opts: [ { mode: 'drive', what: 'Drive', hrs: 1.75, cost: 0, costText: '$0', note: '' } ],
+      yes: ['Ventnor dog beach: off lead all day, all year', 'Blue Gum Reserve off-lead park in Cowes', 'Outdoor tables at plenty of Cowes cafés'],
+      no: ['The Penguin Parade', 'Summerland Peninsula beaches', 'The Grand Prix circuit'],
+      tip: 'Back on lead within 50 m of any signed wildlife refuge.',
+      src: ['piBeach', 'pi'] },
+    { id: 'gor', name: 'Great Ocean Road', where: 'Victoria · Surf Coast to Otways', lon: 143.97, lat: -38.54, views: ['town','near'], line: 'drive', lab: [-1.3, 0.5, 'end'],
+      blurb: 'the road says yes. the famous bits say no.',
+      opts: [ { mode: 'drive', what: 'Drive (Lorne, Apollo Bay)', hrs: 2.5, cost: 0, costText: '$0' } ],
+      yes: ['Towns and many beaches, e.g. Mounts Bay in Apollo Bay is off lead dawn to 10am and 6pm to dusk', 'A few leashed walks inside the Otways: Lake Elizabeth, St George River near Lorne', 'Beauchamp Falls in Otway Forest Park, on lead', 'The Great Ocean Road Brewhouse beer garden'],
+      no: ['Twelve Apostles, Loch Ard Gorge (Port Campbell National Park)', 'Most Otway waterfalls and the Otway Fly, car park included'],
+      tip: 'Drive past the Apostles; walk the dog at Apollo Bay instead.',
+      src: ['gor', 'apollo', 'lorne'] },
+    { id: 'tasmania', name: 'Tasmania', where: 'Overnight from Geelong', lon: 146.36, lat: -41.18, views: ['near','far'], line: 'ferry', lab: [1.4, -1.2, 'start'],
+      blurb: 'the big one. she sleeps in your cabin the whole way.',
+      opts: [
+        { mode: 'ferry', what: 'Spirit of Tasmania, pet-friendly cabin', hrs: 11, cost: 275, costText: 'from $275', note: 'Dog sails free; you pay for the whole cabin. Only 18 per ship, book early.' },
+        { mode: 'fly', what: 'Pawmobile, dog-only flight', hrs: 1.5, cost: null, costText: 'quote', note: 'Saturdays from Essendon. The dog flies with a handler; you go separately.' }
+      ],
+      yes: ['Bay of Fires Conservation Area, on lead (some beaches, campgrounds, tracks)', 'Coles Bay Conservation Area, right next to Freycinet', 'Port Arthur Historic Site grounds, on lead', 'Bridestowe Lavender Estate fields, on lead', 'The Springs tracks on kunanyi / Mt Wellington, on lead'],
+      no: ['Cradle Mountain, Freycinet, and every other national park', 'Cataract Gorge Reserve in Launceston (take the dog-friendly river cruise instead)'],
+      tip: 'Worm her with praziquantel within 14 days before you land, and keep the proof.',
+      src: ['sotRules', 'pwsDogs', 'ract', 'tnTas', 'biosec', 'pawmobile'] },
+    { id: 'kingisland', name: 'King & Flinders Islands', where: 'Bass Strait · by small plane', lon: 143.93, lat: -39.88, views: ['near'], line: 'fly', lab: [-1.2, 0.6, 'end'],
+      blurb: 'tiny planes from Essendon. she rides in the back.',
+      opts: [ { mode: 'fly', what: 'Sharp Airlines from Essendon, in the hold', big: 'maybe', hrs: 2.5, cost: 74, costText: '$74–$130', note: '$74 under 10 kg, $130 for 11–30 kg.' } ],
+      yes: ['Sharp Airlines carries pets on its Essendon routes'],
+      no: ['National parks, as everywhere in Tasmania'],
+      tip: 'Animal plus crate max 40 kg and freight items max 75 × 45 × 50 cm, so a big dog may not fit. Ask before booking.',
+      src: ['sharp'] },
+    { id: 'adelaide', name: 'Adelaide', where: 'South Australia', lon: 138.6, lat: -34.93, views: ['far'], line: 'drive', lab: [-8, -6, 'end'],
+      blurb: 'small dogs can fly with you. big dogs: road trip.',
+      opts: [
+        { mode: 'drive', what: 'Drive', hrs: 8, cost: 0, costText: '$0' },
+        { mode: 'fly', what: 'Virgin Pets in Cabin', big: false, hrs: 1.5, cost: 149, costText: '$149', note: 'Book by phone, 72+ hours ahead.' },
+        { mode: 'fly', what: 'Pet-transport company, in the hold', hrs: 5, cost: 450, costText: '$450–$800' }
+      ],
+      yes: ['Any size dog by car', 'Small dogs in the cabin on Virgin'],
+      no: ['Dogs over 8 kg (with carrier) in the cabin'],
+      tip: 'Keep going to Kangaroo Island: pets ride that ferry free.',
+      src: ['virgin', 'dogmovers'] },
+    { id: 'kangaroo', name: 'Kangaroo Island', where: 'South Australia · via Cape Jervis', lon: 137.3, lat: -35.82, views: ['far'], line: 'ferry', lab: [-8, 14, 'end'],
+      blurb: 'pets ride free. the koalas are off limits though.',
+      opts: [ { mode: 'ferry', what: 'Drive to Cape Jervis + SeaLink ferry', hrs: 10.5, cost: 0, costText: 'free', note: 'Dog is free; you still pay for the car and people.' } ],
+      yes: ['The SeaLink ferry, free (tell check-in)', 'Most of the island outside the parks'],
+      no: ['Seal Bay, Flinders Chase, and every national or conservation park, car parks included'],
+      tip: 'Dogs no longer need to be registered with the council before visiting (cats still do).',
+      src: ['kiPets', 'kiFaq'] },
+    { id: 'sydney', name: 'Sydney', where: 'New South Wales', lon: 151.2, lat: -33.87, views: ['far'], line: 'drive', lab: [8, 4, 'start'],
+      blurb: 'a long day in the car, or a short one in a crate.',
+      opts: [
+        { mode: 'drive', what: 'Drive the Hume', hrs: 9, cost: 0, costText: '$0' },
+        { mode: 'fly', what: 'Pet-transport company, in the hold', hrs: 5, cost: 400, costText: '$400–$700', note: 'Booking Qantas Freight yourself is usually cheaper.' }
+      ],
+      yes: ['Any size dog by car or freight'],
+      no: ['NSW trains and TrainLink coaches don’t take pet dogs'],
+      tip: 'Qantas won’t fly pets when it’s above 35°C or below 5°C. Free rebooking if that happens.',
+      src: ['dogmovers', 'qf'] },
+    { id: 'goldcoast', name: 'Gold & Sunshine Coasts', where: 'Queensland', lon: 153.3, lat: -27.6, views: ['far'], line: 'fly', lab: [8, 4, 'start'],
+      blurb: 'where pets-in-cabin started. small dogs only.',
+      opts: [
+        { mode: 'fly', what: 'Virgin Pets in Cabin', big: false, hrs: 2.5, cost: 149, costText: '$149', note: 'One pet per person.' },
+        { mode: 'fly', what: 'Pet-transport company to Brisbane', hrs: 6, cost: 400, costText: '$400–$900' },
+        { mode: 'drive', what: 'Drive', hrs: 20, cost: 0, costText: '$0', note: '' }
+      ],
+      yes: ['Small dogs in the cabin with you', 'Bigger dogs by freight or car'],
+      no: ['Big dogs in the cabin'],
+      src: ['virgin', 'dogmovers'] },
+    { id: 'magnetic', name: 'Magnetic Island', where: 'Queensland · off Townsville', lon: 146.83, lat: -19.15, views: ['far'], line: 'fly', lab: [8, 4, 'start'],
+      blurb: 'a tropical island that actually lets dogs on.',
+      opts: [
+        { mode: 'fly', what: 'Pet-transport company to Townsville, then ferry', hrs: 7, cost: 800, costText: '$800–$1,300', note: 'Ferry is free; muzzle needed on the passenger ferry.' }
+      ],
+      yes: ['Most of the island and most beaches, e.g. Geoffrey Bay on lead'],
+      no: ['The national park (including the Forts Walk)', 'Alma Bay and other signed beaches'],
+      tip: 'SeaLink sells soft muzzles in the terminal if you forget.',
+      src: ['maggie', 'maggiePolicy', 'dogmovers'] },
+    { id: 'cairns', name: 'Cairns', where: 'Far North Queensland', lon: 145.77, lat: -16.92, views: ['far'], line: 'fly', lab: [-8, -4, 'end'],
+      blurb: 'small dogs can fly up in the cabin.',
+      opts: [ { mode: 'fly', what: 'Virgin Pets in Cabin', big: false, hrs: 3.5, cost: 149, costText: '$149', note: '' } ],
+      yes: ['Small dogs in the cabin'],
+      no: ['Big dogs in the cabin: use a pet-transport company (get a quote)'],
+      src: ['virgin', 'qf'] },
+    { id: 'perth', name: 'Perth', where: 'Western Australia', lon: 115.86, lat: -31.95, views: ['far'], line: 'drive', lab: [8, -6, 'start'],
+      blurb: 'cross the Nullarbor together, or send her ahead.',
+      opts: [
+        { mode: 'drive', what: 'Drive the Nullarbor', hrs: 36, cost: 0, costText: '$0', note: 'About 3,400 km. Patchy phone reception.' },
+        { mode: 'fly', what: 'Pet-transport company, in the hold', hrs: 8, cost: 800, costText: '$800–$1,800' }
+      ],
+      yes: ['Roadhouse stops along the Nullarbor', 'Any size dog by car or freight'],
+      no: ['Leaving her in a parked car, even for a moment'],
+      tip: 'Keep her on lead at stops: baits are laid in parts of the outback.',
+      src: ['nullarbor', 'dogmovers'] },
+    { id: 'darwin', name: 'Darwin', where: 'Northern Territory', lon: 130.84, lat: -12.46, views: ['far'], line: 'fly', lab: [8, 4, 'start'],
+      blurb: 'possible. expensive. hot.',
+      opts: [ { mode: 'fly', what: 'Pet-transport company, in the hold', hrs: 9, cost: 1500, costText: '$1,500–$3,500', note: 'Quotes vary a lot.' } ],
+      yes: ['Freight via a pet-transport company'],
+      no: ['Flying in very hot weather: airlines won’t carry pets above 35°C'],
+      src: ['dogmovers', 'qf'] },
+    { id: 'nz', name: 'New Zealand', where: 'Overseas · no quarantine', lon: 174.78, lat: -41.29, views: ['far'], line: 'fly', lab: [-8, 16, 'end'],
+      blurb: 'the only overseas trip with no quarantine either way.',
+      opts: [ { mode: 'fly', what: 'Pet-transport company, as cargo', hrs: 6, cost: 2000, costText: '~$2,000–$3,000', note: 'Transport only, before vet costs.' } ],
+      yes: ['No import permit from Australia if NZ’s health standard is met', 'No quarantine coming home either'],
+      no: ['Cabin travel: dogs fly as manifested cargo', 'A short holiday: allow about a month of vet prep'],
+      tip: 'Lodge the export notice at least 10 days before you fly.',
+      src: ['nz', 'mpi'] }
+  ];
+
+  var NOGO = [
+    { name: 'Twelve Apostles', lon: 143.1, lat: -38.66 },
+    { name: 'Penguin Parade', lon: 145.15, lat: -38.51, hideLabel: true },
+    { name: 'Cradle Mountain', lon: 145.95, lat: -41.68 },
+    { name: 'Freycinet NP', lon: 148.29, lat: -42.15 }
+  ];
+
+  var TIME = [
+    { id: 'weekend', label: 'A weekend', max: 4 },
+    { id: 'week', label: 'A week', max: 12 },
+    { id: 'any', label: 'No limit', max: Infinity }
+  ];
+  var BUDGET = [
+    { id: 'free', label: 'Free', max: 0 },
+    { id: 'u350', label: 'Under $350', max: 350 },
+    { id: 'u1000', label: 'Under $1,000', max: 1000 },
+    { id: 'any', label: 'Whatever it takes', max: Infinity }
+  ];
+  var MODES = [ { id: 'drive', label: 'drive' }, { id: 'train', label: 'train' }, { id: 'ferry', label: 'ferry' }, { id: 'fly', label: 'fly' } ];
+  var state = { time: 'any', budget: 'any', view: 'near', sel: 'tasmania', modes: { drive: true, train: true, ferry: true, fly: true }, big: false, sort: 'dist', layout: 'cards' };
+
+  // ---------- geometry ----------
+  function P(lon, lat) { return [(lon - 112) * 12, (-lat - 10) * 12]; }
+  var MEL = { lon: 144.96, lat: -37.81 };
+  var VIEWS = { town: [378, 322, 33, 22], near: [345, 318, 114, 65], far: [0, 0, 780, 444] };
+  var SHAPES = {
+    aus: [[142.5,-10.7],[143.5,-12.5],[143.8,-14.4],[145.3,-14.9],[145.5,-16.4],[146.1,-18.3],[146.8,-19.2],[148.8,-20.3],[149.5,-21.5],[150.8,-22.6],[151.2,-23.8],[152.9,-25.3],[153.1,-26.4],[153.6,-28.2],[153.4,-29.4],[153.1,-30.9],[152.5,-32.4],[151.3,-33.6],[150.9,-34.6],[150.2,-35.7],[150.0,-37.4],[148.2,-37.8],[147.0,-38.4],[146.4,-39.13],[146.2,-38.95],[145.95,-38.68],[145.62,-38.67],[145.55,-38.6],[145.45,-38.53],[145.37,-38.52],[145.47,-38.43],[145.55,-38.33],[145.53,-38.23],[145.4,-38.2],[145.25,-38.24],[145.19,-38.3],[145.22,-38.38],[145.13,-38.43],[145.02,-38.48],[144.89,-38.5],[144.75,-38.43],[144.65,-38.31],[144.74,-38.34],[144.9,-38.37],[144.97,-38.33],[145.03,-38.26],[145.04,-38.21],[145.12,-38.14],[145.08,-38.0],[144.99,-37.91],[144.97,-37.86],[144.93,-37.84],[144.9,-37.87],[144.83,-37.87],[144.69,-37.98],[144.52,-38.06],[144.42,-38.1],[144.38,-38.13],[144.5,-38.13],[144.65,-38.11],[144.71,-38.14],[144.72,-38.18],[144.66,-38.27],[144.61,-38.29],[144.49,-38.29],[144.33,-38.34],[144.18,-38.41],[143.98,-38.54],[143.67,-38.76],[143.51,-38.86],[142.0,-38.4],[140.6,-38.0],[139.8,-37.3],[139.3,-35.9],[138.5,-35.6],[138.1,-35.0],[138.5,-34.3],[137.8,-33.2],[137.5,-34.0],[137.0,-34.9],[135.9,-34.9],[135.2,-34.4],[134.2,-32.9],[132.0,-32.0],[129.0,-31.6],[126.0,-32.3],[124.0,-33.1],[122.0,-33.9],[119.5,-34.3],[118.0,-35.0],[116.0,-35.0],[115.0,-34.3],[115.6,-33.4],[115.7,-31.9],[115.0,-29.5],[114.6,-28.5],[113.5,-26.5],[113.7,-24.5],[113.4,-22.8],[114.2,-21.8],[116.7,-20.6],[118.8,-20.3],[121.0,-19.5],[122.3,-17.8],[123.5,-16.6],[125.0,-15.0],[126.8,-13.9],[128.2,-14.9],[129.6,-14.9],[130.0,-13.3],[131.0,-12.2],[132.6,-11.5],[135.0,-12.2],[136.8,-12.2],[136.5,-13.5],[135.5,-14.9],[137.5,-16.2],[139.2,-17.4],[140.8,-17.4],[141.6,-15.0],[141.5,-12.5]],
+    tas: [[144.6,-40.7],[145.3,-40.8],[146.3,-41.1],[147.3,-40.95],[148.3,-40.9],[148.3,-41.6],[148.3,-42.2],[147.9,-43.2],[146.9,-43.6],[146.0,-43.5],[145.4,-42.6],[145.2,-42.2],[144.7,-41.3]],
+    ki: [[136.6,-35.7],[137.6,-35.6],[138.1,-35.8],[137.5,-36.05],[136.6,-35.95]],
+    king: [[143.85,-39.6],[144.1,-39.65],[144.12,-40.1],[143.9,-40.1]],
+    flinders: [[147.8,-39.75],[148.3,-39.9],[148.25,-40.25],[147.85,-40.15]],
+    phillip: [[145.1,-38.48],[145.2,-38.45],[145.3,-38.46],[145.37,-38.5],[145.3,-38.54],[145.15,-38.53]],
+    french: [[145.27,-38.29],[145.42,-38.3],[145.45,-38.38],[145.33,-38.42],[145.27,-38.36]],
+    nzn: [[172.7,-34.4],[174.3,-35.3],[175.0,-36.9],[176.0,-37.6],[178.5,-37.7],[177.9,-39.1],[176.9,-39.5],[176.0,-41.0],[174.8,-41.3],[174.6,-39.8],[173.8,-39.2],[174.6,-38.0],[174.2,-36.9],[173.1,-35.2]],
+    nzs: [[172.7,-40.5],[174.3,-41.0],[173.9,-42.3],[172.7,-43.4],[171.2,-44.4],[170.6,-45.9],[169.0,-46.6],[166.5,-45.8],[166.9,-45.1],[168.3,-44.0],[170.8,-42.7],[172.1,-41.4]]
+  };
+  function poly(pts) { return 'M' + pts.map(function (p) { var q = P(p[0], p[1]); return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join('L') + 'Z'; }
+
+  // ---------- helpers ----------
+  function tierOf(cost) { return cost === 0 ? 1 : cost < 350 ? 2 : cost < 1000 ? 3 : 4; }
+  function tierLabel(t) { return ['', 'free', 'under $350', 'under $1,000', '$1,000+'][t]; }
+  function tierVar(t) { return 'var(--t' + t + ')'; }
+  function cheapest(d) {
+    var c = d.opts.filter(function (o) { return o.cost !== null; }).sort(function (a, b) { return a.cost - b.cost; });
+    return c[0] || d.opts[0];
+  }
+  function matchingOpts(d) {
+    var tmax = TIME.filter(function (t) { return t.id === state.time; })[0].max;
+    var bmax = BUDGET.filter(function (b) { return b.id === state.budget; })[0].max;
+    return d.opts.filter(function (o) {
+      var costOk = o.cost === null ? bmax === Infinity : o.cost <= bmax;
+      var bigOk = !state.big || o.big !== false;
+      return costOk && o.hrs <= tmax && state.modes[o.mode] && bigOk;
+    });
+  }
+  function matches(d) { return matchingOpts(d).length > 0; }
+  function fmtHrs(h) { return h < 1 ? Math.round(h * 60) + ' min' : (h % 1 ? h.toFixed(1).replace('.0', '') : h) + ' hr' + (h === 1 ? '' : 's'); }
+
+  // ---------- map ----------
+  var svg = document.getElementById('map'), NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function inView(d) { return d.views.indexOf(state.view) !== -1; }
+
+  // On narrow screens the map gets a taller frame, and markers/labels are scaled up
+  // so text stays ~11px instead of shrinking with the map (s = land scale, u = UI scale).
+  var lastW = 0;
+  function drawMap() {
+    var W = svg.getBoundingClientRect().width || 780; lastW = W;
+    var vb = VIEWS[state.view].slice(), s = vb[2] / 780;
+    if (W < 600) { var nh = vb[2] * 0.8; vb[1] -= (nh - vb[3]) / 2; vb[3] = nh; }
+    var u = s * Math.min(2.4, Math.max(1, 700 / W));
+    svg.setAttribute('viewBox', vb.join(' '));
+    svg.innerHTML = '';
+    var land = el('g', {}, svg);
+    Object.keys(SHAPES).forEach(function (k) { el('path', { d: poly(SHAPES[k]), 'class': 'land', 'stroke-width': (1.4 * s).toFixed(3) }, land); });
+    // sea labels
+    var seaFs = (state.view === 'near' ? 5 : 16);
+    if (state.view === 'town') {
+      var t0 = el('text', { x: P(144.85, -38.12)[0], y: P(144.85, -38.12)[1], 'class': 'sea', 'font-size': 1.4, 'text-anchor': 'middle' }, svg); t0.textContent = 'Port Phillip';
+    } else if (state.view === 'near') {
+      var t1 = el('text', { x: P(146.5, -39.4)[0], y: P(146.5, -39.4)[1], 'class': 'sea', 'font-size': seaFs, 'text-anchor': 'middle' }, svg); t1.textContent = 'Bass Strait';
+    } else {
+      var t2 = el('text', { x: P(130, -38.5)[0], y: P(130, -38.5)[1], 'class': 'sea', 'font-size': seaFs, 'text-anchor': 'middle' }, svg); t2.textContent = 'Southern Ocean';
+      var t3 = el('text', { x: P(163, -36)[0], y: P(163, -36)[1], 'class': 'sea', 'font-size': seaFs, 'text-anchor': 'middle' }, svg); t3.textContent = 'Tasman Sea';
+    }
+    var mel = P(MEL.lon, MEL.lat);
+    // routes
+    var routes = el('g', {}, svg);
+    D.forEach(function (d) {
+      if (!inView(d) || !matches(d)) return;
+      var b = P(d.lon, d.lat), mx = (mel[0] + b[0]) / 2, my = (mel[1] + b[1]) / 2;
+      var dx = b[0] - mel[0], dy = b[1] - mel[1], len = Math.sqrt(dx * dx + dy * dy) || 1;
+      var cx = mx - dy / len * len * 0.18, cy = my + dx / len * len * 0.18;
+      var dash = d.line === 'ferry' ? (5 * s) + ' ' + (3 * s) : d.line === 'fly' ? (0.5 * s) + ' ' + (4 * s) : d.line === 'train' ? (9 * s) + ' ' + (2 * s) + ' ' + (1 * s) + ' ' + (2 * s) : 'none';
+      el('path', { d: 'M' + mel[0] + ',' + mel[1] + ' Q' + cx + ',' + cy + ' ' + b[0] + ',' + b[1], 'class': 'route ' + d.line, 'stroke-width': (2 * s).toFixed(3), 'stroke-dasharray': dash }, routes);
+    });
+    // no-go markers (close-to-home view only)
+    if (state.view === 'near') {
+      NOGO.forEach(function (n) {
+        var p = P(n.lon, n.lat), r = 2.2 * u * 3, g = el('g', { 'class': 'nogo', 'aria-hidden': 'true' }, svg);
+        el('path', { d: 'M' + (p[0] - r) + ',' + (p[1] - r) + 'L' + (p[0] + r) + ',' + (p[1] + r) + 'M' + (p[0] + r) + ',' + (p[1] - r) + 'L' + (p[0] - r) + ',' + (p[1] + r), 'stroke-width': (1.6 * u).toFixed(3) }, g);
+        if (!n.hideLabel) {
+          var t = el('text', { x: p[0], y: p[1] + 15 * u, 'font-size': (10 * u).toFixed(2), 'text-anchor': 'middle', 'stroke-width': (3 * u).toFixed(2) }, g);
+          t.textContent = 'no dogs: ' + n.name;
+        }
+      });
+    }
+    // home
+    var h = el('g', { 'class': 'home' }, svg);
+    el('path', { d: starPath(mel[0], mel[1], 7 * u, 3 * u), fill: 'var(--pink)' }, h);
+    var ht = el('text', { x: mel[0] + 9 * u, y: mel[1] - 6 * u, 'font-size': (17 * u).toFixed(2), 'stroke-width': (3 * u).toFixed(2) }, h);
+    ht.textContent = 'home (the couch)';
+    // markers
+    D.forEach(function (d) {
+      if (!inView(d)) return;
+      var p = P(d.lon, d.lat), on = matches(d), t = tierOf(cheapest(d).cost === null ? 9999 : cheapest(d).cost);
+      var shown = on ? matchingOpts(d) : d.opts;
+      var best = shown.filter(function (o) { return o.cost !== null; }).sort(function (a, b) { return a.cost - b.cost; })[0];
+      if (best) t = tierOf(best.cost);
+      var g = el('g', { 'class': 'mk' + (on ? '' : ' dim') + (state.sel === d.id ? ' sel' : ''), tabindex: on ? '0' : '-1', role: 'button',
+        'aria-label': d.name + ', ' + (best ? best.costText : 'quote') + ' for the dog' + (on ? '' : ' (outside your filters)'), 'data-id': d.id }, svg);
+      el('circle', { 'class': 'halo', cx: p[0], cy: p[1], r: 11 * u, 'stroke-width': (2.5 * u).toFixed(3) }, g);
+      el('circle', { 'class': 'dot', cx: p[0], cy: p[1], r: 6.5 * u, fill: tierVar(t), 'stroke-width': (2 * u).toFixed(3) }, g);
+      el('circle', { cx: p[0], cy: p[1], r: 16 * u, fill: 'transparent' }, g); // bigger hit area
+      var lab = d.lab || [8, 4, 'start'], fs = 12 * u, mult = Math.abs(lab[0]) < 3 ? 6 : 1;
+      var tx = el('text', { x: p[0] + lab[0] * u * mult, y: p[1] + lab[1] * u * mult, 'font-size': fs.toFixed(2), 'text-anchor': lab[2], 'font-weight': '700', 'stroke-width': (3.5 * u).toFixed(2) }, g);
+      tx.textContent = d.name;
+      // flip a label to the other side of its dot if it would be cut off by the map edge
+      var bb = tx.getBBox(), dx = lab[0] * u * mult;
+      if (bb.x < vb[0] || bb.x + bb.width > vb[0] + vb[2]) {
+        tx.setAttribute('x', p[0] - dx);
+        tx.setAttribute('text-anchor', lab[2] === 'end' ? 'start' : lab[2] === 'start' ? 'end' : 'middle');
+      }
+    });
+  }
+  function starPath(cx, cy, R, r) {
+    var d = '';
+    for (var i = 0; i < 10; i++) {
+      var a = Math.PI / 5 * i - Math.PI / 2, rad = i % 2 ? r : R;
+      d += (i ? 'L' : 'M') + (cx + rad * Math.cos(a)).toFixed(2) + ',' + (cy + rad * Math.sin(a)).toFixed(2);
+    }
+    return d + 'Z';
+  }
+
+  // ---------- filters ----------
+  function chips(id, list, key) {
+    var box = document.getElementById(id);
+    box.innerHTML = list.map(function (o) {
+      return '<button class="chip" type="button" data-' + key + '="' + o.id + '" aria-pressed="' + (state[key] === o.id) + '">' + o.label + '</button>';
+    }).join('');
+  }
+
+  // ---------- detail + list ----------
+  var srcLinks = function (d) { return d.src.map(function (k) { return '<a href="' + S[k].u + '" target="_blank" rel="noopener">' + S[k].t + '</a>'; }).join(' · '); };
+
+  function renderDetail(animate) {
+    var d = D.filter(function (x) { return x.id === state.sel; })[0], box = document.getElementById('detail');
+    box.classList.remove('pop'); if (animate) { void box.offsetWidth; box.classList.add('pop'); }
+    var okIds = matchingOpts(d);
+    box.innerHTML =
+      '<div><p class="where">' + d.where + '</p><h2>' + d.name + '</h2><p class="blurb">' + d.blurb + '</p>' +
+      d.opts.map(function (o) {
+        var fits = okIds.indexOf(o) !== -1;
+        var nb = o.big === false ? '<span class="nb">✕ Not for Betsy: small dogs only</span>' : o.big === 'maybe' ? '<span class="nb maybe">? Betsy: check her crate fits</span>' : '';
+        return '<div class="opt">' +
+          '<span class="what"><small>' + o.mode + '</small>' + o.what + '</span><span class="cost">' + priceText(o) + '</span>' +
+          '<span class="note">~' + fmtHrs(o.hrs) + ' one way' + (o.note ? '. ' + o.note : '') + (fits ? '' : '<span class="nf">doesn\u2019t fit your time or budget filter</span>') + nb + '</span></div>';
+      }).join('') + '<button class="inv" type="button" data-inv="go">see her invoice for this trip \u2192</button></div>' +
+      '<div class="yesno"><h3>She can</h3><ul class="yes">' + d.yes.map(function (y) { return '<li>' + y + '</li>'; }).join('') + '</ul>' +
+      '<h3>She can’t</h3><ul class="no">' + d.no.map(function (y) { return '<li>' + y + '</li>'; }).join('') + '</ul>' +
+      (d.tip ? '<p class="tip"><b>tip:</b> ' + d.tip + '</p>' : '') +
+      (d.src.length ? '<p class="srcs">Sources: ' + srcLinks(d) + '</p>' : '') + '</div>';
+  }
+
+  function km(d) {
+    var R = 6371, r = Math.PI / 180, dLat = (d.lat - MEL.lat) * r, dLon = (d.lon - MEL.lon) * r;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(MEL.lat * r) * Math.cos(d.lat * r) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var k = 2 * R * Math.asin(Math.sqrt(a));
+    return k < 500 ? Math.round(k / 10) * 10 : Math.round(k / 50) * 50;
+  }
+  function kmText(d) { return km(d).toLocaleString('en-AU') + ' km away'; }
+  function priceText(o) { return o.mode === 'drive' && o.cost === 0 ? '$0 + human labour' : o.costText; }
+  function bestOpt(d) {
+    var m = matchingOpts(d);
+    return m.filter(function (x) { return x.cost !== null; }).sort(function (a, b) { return a.cost - b.cost; })[0] || m[0];
+  }
+  function sorter(a, b, ka, kb) {
+    if (state.sort === 'name') return a.name.localeCompare(b.name);
+    if (state.sort === 'dist') return km(a) - km(b) || (ka.cost === null ? Infinity : ka.cost) - (kb.cost === null ? Infinity : kb.cost);
+    var va = ka[state.sort], vb = kb[state.sort];
+    if (va === null) va = Infinity; if (vb === null) vb = Infinity;
+    return va - vb || a.name.localeCompare(b.name);
+  }
+  function betsyFlag(o) {
+    if (o.big === false) return '<span class="betsy no">not for Betsy: greyhounds are way over 8 kg</span>';
+    if (o.big === 'maybe') return '<span class="betsy maybe">Betsy: check her crate fits</span>';
+    return '';
+  }
+  function bigText(o) { return o.big === false ? 'no, 8 kg max' : o.big === 'maybe' ? 'check size' : 'yes'; }
+
+  function renderList() {
+    var list = D.filter(matches), grid = document.getElementById('grid');
+    document.getElementById('count').textContent = list.length
+      ? list.length + (list.length === 1 ? ' place fits.' : ' places fit.') + ' tap one.'
+      : 'nothing fits. maybe just nap at home?';
+    grid.className = state.layout === 'table' ? '' : 'cards';
+    if (!list.length) { grid.innerHTML = '<p class="tr-empty">try a bigger budget, more time off, or another way to travel</p>'; return; }
+    if (state.layout === 'cards') {
+      list.sort(function (a, b) { return sorter(a, b, bestOpt(a), bestOpt(b)); });
+      grid.innerHTML = list.map(function (d) {
+        var o = bestOpt(d);
+        return '<button class="dest-card" type="button" data-pick="' + d.id + '" aria-current="' + (state.sel === d.id) + '">' +
+          '<span class="tag dist">' + kmText(d) + '</span>' +
+          '<span class="nm">' + d.name + '</span>' +
+          '<span class="price">' + priceText(o) + '<small> for the dog</small></span>' +
+          '<span class="meta">' + o.what + ', ~' + fmtHrs(o.hrs) + '</span>' +
+          (o.big === false ? '<span class="nb">✕ not for Betsy</span>' : '') + '</button>';
+      }).join('');
+      return;
+    }
+    var rows = [];
+    list.forEach(function (d) { matchingOpts(d).forEach(function (o) { rows.push({ d: d, o: o }); }); });
+    rows.sort(function (a, b) { return sorter(a.d, b.d, a.o, b.o); });
+    grid.innerHTML = '<div class="tbl-wrap"><table class="tbl"><caption class="sr-only" style="position:absolute;left:-9999px">Ways to travel with a dog from Melbourne</caption>' +
+      '<thead><tr><th scope="col">Destination</th><th scope="col">Distance</th><th scope="col">How</th><th scope="col">Dog, one way</th><th scope="col">Time</th><th scope="col">Betsy?</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        return '<tr tabindex="0" data-pick="' + r.d.id + '" aria-current="' + (state.sel === r.d.id) + '">' +
+          '<td><span class="nm">' + r.d.name + '</span><br><span class="sub">' + r.d.where + '</span></td>' +
+          '<td style="white-space:nowrap">' + km(r.d).toLocaleString('en-AU') + ' km</td>' +
+          '<td><span class="mode ' + r.o.mode + '">' + r.o.mode + '</span><br><span class="sub">' + r.o.what + '</span></td>' +
+          '<td class="cost">' + priceText(r.o) + '</td>' +
+          '<td>~' + fmtHrs(r.o.hrs) + '</td>' +
+          '<td>' + (r.o.big === false ? '<span class="nb">✕ small dogs only</span>' : r.o.big === 'maybe' ? '<span class="nb maybe">? check crate</span>' : '✓') + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+
+  function renderAll(animate) {
+    chips('f-time', TIME, 'time'); chips('f-budget', BUDGET, 'budget');
+    document.getElementById('f-mode').innerHTML = MODES.map(function (m) {
+      return '<button class="chip" type="button" data-mode="' + m.id + '" aria-pressed="' + !!state.modes[m.id] + '">' + m.label + '</button>';
+    }).join('');
+    document.getElementById('f-big').setAttribute('aria-pressed', state.big);
+    document.getElementById('f-sort').value = state.sort;
+    document.querySelectorAll('[data-layout]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.layout === state.layout); });
+    document.querySelectorAll('[data-view]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.view === state.view); });
+    drawMap(); renderDetail(animate); renderList();
+  }
+
+  function select(id, opts) {
+    state.sel = id;
+    var dd = D.filter(function (x) { return x.id === id; })[0];
+    var okB = function (o) { return o.big !== false; }, byCost = function (x, y) { return (x.cost === null ? 1e9 : x.cost) - (y.cost === null ? 1e9 : y.cost); };
+    var bo = matchingOpts(dd).filter(okB).sort(byCost)[0] || dd.opts.filter(okB).sort(byCost)[0] || dd.opts[0];
+    Q.dest = id; Q.opt = dd.opts.indexOf(bo);
+    if (typeof renderQuote === 'function') renderQuote(true);
+    var d = D.filter(function (x) { return x.id === id; })[0];
+    if (!inView(d)) state.view = d.views[0];
+    renderAll(true);
+    if (opts && opts.scroll) document.getElementById('detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#f-big')) { state.big = !state.big; renderAll(); return; }
+    var t = e.target.closest('[data-time],[data-budget],[data-view],[data-mode],[data-layout],[data-pick],.mk');
+    if (!t) return;
+    if (t.dataset.mode) {
+      state.modes[t.dataset.mode] = !state.modes[t.dataset.mode];
+      if (!state.modes.drive && !state.modes.train && !state.modes.ferry && !state.modes.fly) state.modes[t.dataset.mode] = true; // keep at least one
+      renderAll(); return;
+    }
+    if (t.dataset.layout) { state.layout = t.dataset.layout; renderAll(); return; }
+    if (t.dataset.time) { state.time = t.dataset.time; renderAll(); }
+    else if (t.dataset.budget) { state.budget = t.dataset.budget; renderAll(); }
+    else if (t.dataset.view) { state.view = t.dataset.view; renderAll(); }
+    else if (t.dataset.pick) select(t.dataset.pick, { scroll: true });
+    else if (t.classList.contains('mk')) select(t.dataset.id);
+  });
+  document.getElementById('f-sort').addEventListener('change', function (e) { state.sort = e.target.value; renderAll(); });
+  document.getElementById('grid').addEventListener('keydown', function (e) {
+    var r = e.target.closest('tr[data-pick]');
+    if (r && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(r.dataset.pick, { scroll: true }); }
+  });
+  var rz;
+  window.addEventListener('resize', function () {
+    clearTimeout(rz);
+    rz = setTimeout(function () { if (Math.abs(svg.getBoundingClientRect().width - lastW) > 40) drawMap(); }, 150);
+  });
+  svg.addEventListener('keydown', function (e) {
+    var g = e.target.closest('.mk');
+    if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); select(g.dataset.id); var again = svg.querySelector('[data-id="' + g.dataset.id + '"]'); if (again) again.focus(); }
+  });
+
+  // ---------- Betsy's invoice (follows the selected place + chosen way) ----------
+  var Q = { dest: 'tasmania', opt: 0, cabin: 'porthole', trip: 'return' };
+  var CAB = { inside: { label: 'inside', price: 275 }, porthole: { label: 'porthole', price: 335 } };
+  function money(n) { return '$' + n.toLocaleString('en-AU'); }
+  function row(l, r, cls) { return '<div class="row' + (cls ? ' ' + cls : '') + '"><span>' + l + '</span><span>' + r + '</span></div>'; }
+  function times(txt, legs) { return legs === 2 ? '2 \u00d7 ' + txt : txt; }
+
+  function invoiceLines(d, o, legs) {
+    var L = [], stamp = 'PAWS ON BOARD', rej = false, total, verdict;
+    var hrs = o.hrs * legs, stops = Math.max(1, Math.ceil(o.hrs / 2.5)) * legs;
+    if (d.id === 'tasmania' && o.mode === 'ferry') {
+      var c = CAB[Q.cabin].price, one = 238 + 69 + c;
+      L.push(row('2 \u00d7 adult', money(238 * legs)), row('1 \u00d7 greyhound', '$0'), row('1 \u00d7 small car', money(69 * legs)),
+        row('pet cabin, ' + CAB[Q.cabin].label, money(c * legs), 'b'), row('dog mat (bring your own)', 'BYO', 'sub'));
+      total = money(one * legs);
+      verdict = Q.cabin === 'porthole' ? 'her pick. she likes to see if it\u2019s morning yet.' : 'cheaper. no idea if it\u2019s morning.';
+      return { L: L, total: total, stamp: stamp, rej: rej, verdict: verdict, real: true };
+    }
+    if (o.mode === 'drive') {
+      L.push(row('betsy\u2019s ticket', '$0'),
+        row('human labour: driving, ' + fmtHrs(hrs), '$$$', 'b'),
+        row('snack stops \u00d7 ' + stops, 'paid in treats'),
+        row('window down, ears out', 'complimentary', 'sub'),
+        row('back seat, fully reclined', 'mandatory', 'sub'));
+      total = '$0 + $$$';
+      verdict = 'the dog travels free. the humans do all the work. as usual.';
+    } else if (o.mode === 'train' && o.big !== false) {
+      L.push(row('betsy\u2019s ticket', '$0'), row('lead + muzzle', 'required', 'b'), row('seat for her', 'floor only'), row('peak hour', 'avoid', 'sub'));
+      total = '$0';
+      verdict = 'the cheapest way to get a greyhound to the beach.';
+    } else if (o.mode === 'ferry') {
+      var drive = o.hrs > 3;
+      L.push(row('betsy\u2019s ticket', '$0'));
+      if (drive) L.push(row('human labour: ' + fmtHrs(hrs) + ' driving', '$$$', 'b'));
+      L.push(d.id === 'kangaroo' ? row('boards via the car ramp', 'VIP') : row('outside deck, ears out', 'complimentary'));
+      L.push(row('humans + car', 'usual fares', 'sub'));
+      total = drive ? '$0 + $$$' : '$0';
+      verdict = drive ? 'the ferry\u2019s free for her. the drive to it is not free for you.' : 'ferries: the most dog-friendly transport in australia.';
+    } else if (o.big === false) {
+      if (o.mode === 'train') L.push(row('betsy\u2019s ticket', '$0'), row('box you carry in one hand', 'she would not fit', 'b'), row('leg room required', 'all of it', 'sub'));
+      else L.push(row('betsy\u2019s seat (under the seat)', times(o.costText, legs), 'b'), row('carrier, 44 \u00d7 28 \u00d7 28 cm', 'she would not fit'), row('leg room required', 'all of it', 'sub'));
+      total = 'n/a';
+      stamp = 'TOO MUCH LEG'; rej = true;
+      verdict = o.mode === 'train' ? 'declined. v/line only takes dogs that fit in a box.' : 'declined. this one\u2019s for dogs under 8 kg, crate included.';
+    } else if (o.cost === null) {
+      L.push(row('betsy\u2019s own flight', 'on request', 'b'), row('handler on board', 'included'), row('humans', 'travel separately', 'sub'));
+      total = 'quote';
+      verdict = 'she flies first. you meet her there.';
+    } else {
+      L.push(row('betsy\u2019s flight, in the hold', times(o.costText, legs), 'b'),
+        row('one very long nap in a crate', 'included'),
+        row('the reunion lean', 'priceless', 'sub'));
+      if (d.id === 'nz') L.push(row('vet tests + paperwork', 'extra (lots)', 'sub'));
+      if (o.big === 'maybe') { stamp = 'MEASURE FIRST'; rej = true; }
+      total = times(o.costText, legs);
+      verdict = o.big === 'maybe' ? 'small plane. measure the crate before you book.' : 'not cheap, but she\u2019ll sleep through it.';
+    }
+    return { L: L, total: total, stamp: stamp, rej: rej, verdict: verdict };
+  }
+
+  function renderQuote(animate) {
+    var d = D.filter(function (x) { return x.id === Q.dest; })[0], o = d.opts[Q.opt] || d.opts[0], legs = Q.trip === 'return' ? 2 : 1;
+    document.getElementById('q-intro').textContent = d.name + '. Pick how she gets there and the invoice prints itself.';
+    document.getElementById('q-opt').innerHTML = d.opts.map(function (x, i) {
+      return '<button class="chip" type="button" data-qopt="' + i + '" aria-pressed="' + (i === Q.opt) + '">' + x.mode + ': ' + x.what + '</button>';
+    }).join('');
+    var isSpirit = d.id === 'tasmania' && o.mode === 'ferry';
+    document.getElementById('q-cabin-wrap').hidden = !isSpirit;
+    document.getElementById('q-cabin').innerHTML = ['inside', 'porthole'].map(function (k) {
+      return '<button class="chip" type="button" data-qcabin="' + k + '" aria-pressed="' + (Q.cabin === k) + '">' + CAB[k].label + ' \u00b7 ' + money(CAB[k].price) + '</button>';
+    }).join('');
+    document.getElementById('q-trip').innerHTML = [['oneway', 'one way'], ['return', 'return']].map(function (k) {
+      return '<button class="chip" type="button" data-qtrip="' + k[0] + '" aria-pressed="' + (Q.trip === k[0]) + '">' + k[1] + '</button>';
+    }).join('');
+    var inv = invoiceLines(d, o, legs), r = document.getElementById('q-receipt');
+    document.getElementById('q-verdict').textContent = inv.verdict;
+    var no = String(1000 + Math.abs(d.id.split('').reduce(function (a, c) { return a * 31 + c.charCodeAt(0) | 0; }, 7)) % 9000);
+    r.innerHTML = '<p class="hd">BETSY TRAVEL CO.</p>' +
+      '<p class="mt">Melbourne ' + (legs === 2 ? '\u21c4 ' : '\u2192 ') + d.name.toLowerCase() + '<br>' + o.mode + ' \u00b7 ' + (legs === 2 ? 'return' : 'one way') + ' \u00b7 invoice #' + no + '</p><hr>' +
+      inv.L.join('') + '<hr>' +
+      row('TOTAL', inv.total, 'b') +
+      row('paid in', inv.real ? 'actual money' : (inv.rej ? 'nothing, yet' : o.cost === 0 ? 'belly rubs' : 'money, sadly'), 'sub') + '<hr>' +
+      '<p class="ty">' + (inv.rej ? 'please try another way.' : 'thank you for travelling<br>with a professional napper.') + '</p>' +
+      '<span class="stamp' + (inv.rej ? ' rej' : '') + '">' + inv.stamp + '</span>' +
+      (inv.real ? '<p class="mt" style="margin-top:10px">real quote, May 2027 sailing</p>' : '');
+    r.classList.remove('print'); if (animate) { void r.offsetWidth; r.classList.add('print'); }
+  }
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest('[data-qcabin]'), t = e.target.closest('[data-qtrip]'), op = e.target.closest('[data-qopt]'), iv = e.target.closest('[data-inv]');
+    if (c) { Q.cabin = c.dataset.qcabin; renderQuote(true); }
+    if (t) { Q.trip = t.dataset.qtrip; renderQuote(true); }
+    if (op) { Q.opt = +op.dataset.qopt; renderQuote(true); }
+    if (iv) { if (iv.dataset.inv !== 'go') { Q.dest = state.sel; Q.opt = +iv.dataset.inv; } renderQuote(true); document.getElementById('invoice').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+  renderQuote(false);
+
+  renderAll(false);
+})();
+</script>
+</body>
+</html>
