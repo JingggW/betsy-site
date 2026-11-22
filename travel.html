@@ -55,7 +55,7 @@ body{font-size:15px;line-height:1.55}
 .tr-mapwrap{position:relative;background:#F8F2E6;border:1.5px solid var(--ink);border-radius:18px;overflow:hidden}
 .tr-mapbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1.5px dashed var(--line);flex-wrap:wrap}
 .viewbtns{display:flex;gap:6px}
-.viewbtn{font:inherit;font-size:13px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:8px;padding:8px 12px;min-height:40px;cursor:pointer}
+.viewbtn{font:inherit;font-size:13px;white-space:nowrap;border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:8px;padding:8px 12px;min-height:40px;cursor:pointer}
 .viewbtn[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:center}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:4px}
@@ -199,6 +199,10 @@ body{font-size:15px;line-height:1.55}
 
 @media (max-width:760px){
   .tr-detail,.tr-receipt-wrap{grid-template-columns:1fr}
+  .viewbtn .lg{display:none}
+  .viewbtn{padding:8px 10px}
+  .legend{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;width:100%;scrollbar-width:none;padding-bottom:2px}
+  .legend::-webkit-scrollbar{display:none}
   .tr-filters{flex-direction:column}
   .tr-detail{padding:16px}
 }
@@ -273,9 +277,9 @@ body{font-size:15px;line-height:1.55}
     <div class="tr-mapwrap" id="pane-map">
     <div class="tr-mapbar">
       <div class="viewbtns" role="group" aria-label="Map view">
-        <button class="viewbtn" type="button" data-view="town" aria-pressed="false">Around town</button>
-        <button class="viewbtn" type="button" data-view="near" aria-pressed="true">Weekend away</button>
-        <button class="viewbtn" type="button" data-view="far" aria-pressed="false">All of Australia + NZ</button>
+        <button class="viewbtn" type="button" data-view="town" aria-pressed="false"><span class="lg">Around </span>town</button>
+        <button class="viewbtn" type="button" data-view="near" aria-pressed="true">Weekend<span class="lg"> away</span></button>
+        <button class="viewbtn" type="button" data-view="far" aria-pressed="false">Australia + NZ</button>
       </div>
       <div class="legend" aria-hidden="true">
         <span><i style="background:var(--t1)"></i>free</span>
@@ -444,22 +448,30 @@ body{font-size:15px;line-height:1.55}
       var dash = d.line === 'ferry' ? (5 * s) + ' ' + (3 * s) : d.line === 'fly' ? (0.5 * s) + ' ' + (4 * s) : d.line === 'train' ? (9 * s) + ' ' + (2 * s) + ' ' + (1 * s) + ' ' + (2 * s) : 'none';
       el('path', { d: 'M' + mel[0] + ',' + mel[1] + ' Q' + cx + ',' + cy + ' ' + b[0] + ',' + b[1], 'class': 'route ' + d.line, 'stroke-width': (2 * s).toFixed(3), 'stroke-dasharray': dash }, routes);
     });
-    // no-go markers (close-to-home view only)
-    if (state.view === 'near') {
-      NOGO.forEach(function (n) {
-        var p = P(n.lon, n.lat), r = 2.2 * u * 3, g = el('g', { 'class': 'nogo', 'aria-hidden': 'true' }, svg);
-        el('path', { d: 'M' + (p[0] - r) + ',' + (p[1] - r) + 'L' + (p[0] + r) + ',' + (p[1] + r) + 'M' + (p[0] + r) + ',' + (p[1] - r) + 'L' + (p[0] - r) + ',' + (p[1] + r), 'stroke-width': (1.6 * u).toFixed(3) }, g);
-        if (!n.hideLabel) {
-          var t = el('text', { x: p[0], y: p[1] + 15 * u, 'font-size': (10 * u).toFixed(2), 'text-anchor': 'middle', 'stroke-width': (3 * u).toFixed(2) }, g);
-          t.textContent = 'no dogs: ' + n.name;
-        }
-      });
-    }
     // home
     var h = el('g', { 'class': 'home' }, svg);
     el('path', { d: starPath(mel[0], mel[1], 7 * u, 3 * u), fill: 'var(--pink)' }, h);
     var ht = el('text', { x: mel[0] + 9 * u, y: mel[1] - 6 * u, 'font-size': (17 * u).toFixed(2), 'stroke-width': (3 * u).toFixed(2) }, h);
     ht.textContent = 'home (the couch)';
+    // boxes labels must avoid: no-go marks, the home label, and every dot
+    var taken = [];
+    svg.querySelectorAll('.home').forEach(function (n) { taken.push(n.getBBox()); });
+    D.forEach(function (d) {
+      if (!inView(d)) return;
+      var q = P(d.lon, d.lat), r = 7.5 * u;
+      taken.push({ x: q[0] - r, y: q[1] - r, width: 2 * r, height: 2 * r, id: d.id });
+    });
+    function hits(b, self) {
+      var pad = 2.5 * u, area = 0;
+      if (b.x < vb[0] || b.y < vb[1] || b.x + b.width > vb[0] + vb[2] || b.y + b.height > vb[1] + vb[3]) area += 1e9;
+      taken.forEach(function (t) {
+        if (t.id === self) return;
+        var w = Math.min(b.x + b.width, t.x + t.width) - Math.max(b.x, t.x) + pad,
+            h = Math.min(b.y + b.height, t.y + t.height) - Math.max(b.y, t.y) + pad;
+        if (w > 0 && h > 0) area += w * h;
+      });
+      return area;
+    }
     // markers
     D.forEach(function (d) {
       if (!inView(d)) return;
@@ -475,13 +487,36 @@ body{font-size:15px;line-height:1.55}
       var lab = d.lab || [8, 4, 'start'], fs = 12 * u, mult = Math.abs(lab[0]) < 3 ? 6 : 1;
       var tx = el('text', { x: p[0] + lab[0] * u * mult, y: p[1] + lab[1] * u * mult, 'font-size': fs.toFixed(2), 'text-anchor': lab[2], 'font-weight': '700', 'stroke-width': (3.5 * u).toFixed(2) }, g);
       tx.textContent = d.name;
-      // flip a label to the other side of its dot if it would be cut off by the map edge
-      var bb = tx.getBBox(), dx = lab[0] * u * mult;
-      if (bb.x < vb[0] || bb.x + bb.width > vb[0] + vb[2]) {
-        tx.setAttribute('x', p[0] - dx);
-        tx.setAttribute('text-anchor', lab[2] === 'end' ? 'start' : lab[2] === 'start' ? 'end' : 'middle');
+      // place the label where it doesn't cover other labels, dots or no-go marks (or fall off the map):
+      // try its preferred spot, the mirror of it, then right / left / above / below the dot
+      var dx = lab[0] * u * mult, dy = lab[1] * u * mult, flip = lab[2] === 'end' ? 'start' : lab[2] === 'start' ? 'end' : 'middle';
+      var cands = [[p[0] + dx, p[1] + dy, lab[2]], [p[0] - dx, p[1] + dy, flip],
+        [p[0] + 9 * u, p[1] + 4 * u, 'start'], [p[0] - 9 * u, p[1] + 4 * u, 'end'],
+        [p[0], p[1] - 10 * u, 'middle'], [p[0], p[1] + 19 * u, 'middle']];
+      var best = null;
+      for (var ci = 0; ci < cands.length; ci++) {
+        tx.setAttribute('x', cands[ci][0]); tx.setAttribute('y', cands[ci][1]); tx.setAttribute('text-anchor', cands[ci][2]);
+        var score = hits(tx.getBBox(), d.id);
+        if (!best || score < best.score) best = { c: cands[ci], score: score };
+        if (score === 0) break;
       }
+      tx.setAttribute('x', best.c[0]); tx.setAttribute('y', best.c[1]); tx.setAttribute('text-anchor', best.c[2]);
+      taken.push(tx.getBBox());
     });
+    // no-go markers (weekend view only), drawn under the markers; on phones skip any that would cover a place label
+    var firstMk = svg.querySelector('.mk');
+    if (state.view === 'near') {
+      NOGO.forEach(function (n) {
+        var p = P(n.lon, n.lat), r = 2.2 * u * 3, g = el('g', { 'class': 'nogo', 'aria-hidden': 'true' }, svg);
+        svg.insertBefore(g, firstMk);
+        el('path', { d: 'M' + (p[0] - r) + ',' + (p[1] - r) + 'L' + (p[0] + r) + ',' + (p[1] + r) + 'M' + (p[0] + r) + ',' + (p[1] - r) + 'L' + (p[0] - r) + ',' + (p[1] + r), 'stroke-width': (1.6 * u).toFixed(3) }, g);
+        if (!n.hideLabel) {
+          var t = el('text', { x: p[0], y: p[1] + 15 * u, 'font-size': (10 * u).toFixed(2), 'text-anchor': 'middle', 'stroke-width': (3 * u).toFixed(2) }, g);
+          t.textContent = 'no dogs: ' + n.name;
+        }
+        if (W < 600 && hits(g.getBBox(), null) > 0) g.remove();
+      });
+    }
   }
   function starPath(cx, cy, R, r) {
     var d = '';
