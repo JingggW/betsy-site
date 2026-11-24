@@ -16,7 +16,7 @@ window.BETSY_TRAVEL = {
     "searoad": {
       "t": "Searoad Ferries",
       "u": "https://www.searoad.com.au/ferry",
-      "last_verified": "2026-11-22"
+      "last_verified": "2026-11-24"
     },
     "mornpen": {
       "t": "Mornington Peninsula Shire: dogs",
@@ -51,7 +51,7 @@ window.BETSY_TRAVEL = {
     "sotRules": {
       "t": "Spirit of Tasmania: pet rules",
       "u": "https://www.spiritoftasmania.com.au/before-you-sail/travelling-with-pets/pet-rules-safety-and-behaviour/",
-      "last_verified": "2026-11-22"
+      "last_verified": "2026-11-24"
     },
     "pwsDogs": {
       "t": "Tasmania Parks: dogs in parks",
@@ -76,12 +76,12 @@ window.BETSY_TRAVEL = {
     "pawmobile": {
       "t": "Pawmobile: regular services",
       "u": "https://pawmobile.com.au/our-services/our-regular-services/",
-      "last_verified": "2026-11-22"
+      "last_verified": "2026-11-24"
     },
     "sharp": {
-      "t": "Sharp Airlines: freight & animal rates",
-      "u": "https://sharpairlines.com.au/freight-services/sending",
-      "last_verified": "2026-11-22"
+      "t": "Sharp Airlines: carriage of animals",
+      "u": "https://sharpairlines.com.au/travel-information/transporting-pets",
+      "last_verified": "2026-11-24"
     },
     "virgin": {
       "t": "Virgin Australia: Pets in Cabin",
@@ -131,7 +131,7 @@ window.BETSY_TRAVEL = {
     "vline": {
       "t": "V/Line: bikes, luggage & animals",
       "u": "https://aws-public.vline.com.au/Fares-general-info/Bikes-Luggage-Animals",
-      "last_verified": "2026-11-22"
+      "last_verified": "2026-11-24"
     },
     "tnDay": {
       "t": "Travelnuity: dog-friendly day trips from Melbourne",
@@ -151,17 +151,17 @@ window.BETSY_TRAVEL = {
     "wpf": {
       "t": "Western Port Ferries: service info",
       "u": "https://westernportferries.com.au/service-updates",
-      "last_verified": "2026-11-22"
+      "last_verified": "2026-11-24"
     },
     "ppf": {
       "t": "Port Phillip Ferries: Geelong ↔ Portarlington",
       "u": "https://www.portphillipferries.com.au/tickets-times/geelong-to-portarlington",
-      "last_verified": "2026-11-22"
+      "last_verified": "2026-11-24"
     },
     "uber": {
       "t": "Uber: Uber Pet goes national",
       "u": "https://www.uber.com/au/en/newsroom/uberpet-goes-national/",
-      "last_verified": "2026-11-22"
+      "last_verified": "2026-11-24"
     },
     "uberFee": {
       "t": "Uber: Uber Pet launch (surcharge)",
@@ -489,9 +489,9 @@ window.BETSY_TRAVEL = {
           "mode": "ferry",
           "what": "Drive to Stony Point + Western Port Ferries",
           "hrs": 1.75,
-          "cost": null,
-          "costText": "dogs ok, ask fare",
-          "note": "Ferries are cancelled in strong winds."
+          "cost": 0,
+          "costText": "free",
+          "note": "On lead, outside decks only (not in the lounge). Ferries are cancelled in strong winds."
         }
       ],
       "yes": [
@@ -504,7 +504,7 @@ window.BETSY_TRAVEL = {
       "src": [
         "wpf"
       ],
-      "last_verified": "2026-11-22"
+      "last_verified": "2026-11-24"
     },
     {
       "id": "mornington",
@@ -721,9 +721,9 @@ window.BETSY_TRAVEL = {
           "what": "Sharp Airlines from Essendon, in the hold",
           "big": "maybe",
           "hrs": 2.5,
-          "cost": 74,
-          "costText": "$74–$130",
-          "note": "$74 under 10 kg, $130 for 11–30 kg."
+          "cost": 76,
+          "costText": "$76–$267",
+          "note": "Each way: $76 for 1–10 kg, $133 for 10–30 kg, $267 for 31 kg and over."
         }
       ],
       "yes": [
@@ -732,11 +732,11 @@ window.BETSY_TRAVEL = {
       "no": [
         "National parks, as everywhere in Tasmania"
       ],
-      "tip": "Animal plus crate max 40 kg and freight items max 75 × 45 × 50 cm, so a big dog may not fit. Ask before booking.",
+      "tip": "Animal plus crate max 40 kg, and from Victoria she needs a vet certificate for hydatid treatment. Crate hire is $57 one way. Ask about crate size before booking.",
       "src": [
         "sharp"
       ],
-      "last_verified": "2026-11-22"
+      "last_verified": "2026-11-24"
     },
     {
       "id": "adelaide",
